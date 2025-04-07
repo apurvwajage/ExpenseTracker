@@ -89,6 +89,8 @@ def get_selected_file_links(filenames):
         else:
             dbx = connect["dbx"]
         print(filenames)
+        # Clean filenames: convert to list, remove empty strings and strip spaces
+        filenames = [f.strip() for f in filenames if f and f.strip() != ""]
         file_links = {}
         for name in filenames:
             dropbox_path = f"/{name}"  # Adjust path if you're using folders

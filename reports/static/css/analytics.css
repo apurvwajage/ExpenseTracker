@@ -1,0 +1,336 @@
+/* Reset some basic styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #121212;
+    color: #E0E0E0;
+    padding: 20px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Header styling */
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.header h1 {
+    font-size: 3rem;
+    color: #00bcd4;
+    margin-bottom: 10px;
+}
+
+.header p {
+    font-size: 1.2rem;
+    color: #B0B0B0;
+}
+
+/* Filters Section */
+/* Filters Section */
+.filters {
+    background-color: #1f1f1f; /* Dark background for the filter section */
+    padding: 20px; /* Padding around the filter section */
+    border-radius: 8px; /* Rounded corners */
+    margin-bottom: 30px; /* Space below the filter section */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Shadow effect */
+}
+
+.filters form {
+    display: flex; /* Flexbox layout for the form */
+    flex-direction: column; /* Stack items vertically */
+    gap: 15px; /* Space between form elements */
+}
+
+.filters label {
+    font-size: 1.2rem; /* Font size for labels */
+    color: #ffffff; /* White color for labels */
+}
+
+.filters select, .filters input, .filters button {
+    background-color: #333333; /* Dark background for inputs */
+    color: #E0E0E0; /* Light gray text color */
+    padding: 10px; /* Padding inside inputs */
+    border-radius: 8px; /* Rounded corners */
+    border: 1px solid #555; /* Border color */
+    font-size: 1rem; /* Font size */
+}
+
+/* Specific styles for the select element */
+.filters select {
+    width: 100%; /* Full width for the select element */
+    cursor: pointer; /* Pointer cursor on hover */
+    appearance: none; /* Remove default styling */
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><polygon points="0,0 10,0 5,5" fill="%23E0E0E0"/></svg>'); /* Custom arrow */
+    background-repeat: no-repeat; /* Prevent repeating the background image */
+    background-position: right 10px center; /* Position the arrow */
+    background-size: 10px; /* Size of the arrow */
+}
+
+/* Styles for the input element */
+.filters input {
+    width: 100%; /* Full width for input elements */
+    cursor: text; /* Text cursor for input */
+}
+
+/* Styles for the button */
+.filters button {
+    width: 100%; /* Full width for buttons */
+    background-color: #00bcd4; /* Button background color */
+    color: #fff; /* White text color */
+    border: none; /* No border */
+    padding: 12px; /* Padding inside button */
+    font-size: 1.1rem; /* Font size for button */
+    cursor: pointer; /* Pointer cursor on hover */
+    border-radius: 8px; /* Rounded corners */
+    transition: background-color 0.3s ease; /* Transition effect for hover */
+}
+
+/* Button hover effect */
+.filters button:hover {
+    background-color: #0097a7; /* Darker shade on hover */
+}
+
+/* Styles for the select element on focus */
+.filters select:focus {
+    border-color: #00bcd4; /* Change border color on focus */
+    outline: none; /* Remove default outline */
+    box-shadow: 0 0 5px rgba(0, 188, 212, 0.5); /* Add shadow on focus */
+}
+
+/* Responsive styles */
+@media (max-width: 600px) {
+    .filters select, .filters input {
+        font-size: 0.9rem; /* Smaller font size on small screens */
+    }
+}
+
+/* Analytics Summary */
+.analytics-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.summary-item {
+    background-color: #1f1f1f;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+.summary-item h2 {
+    font-size: 1.8rem;
+    color: #ffffff;
+}
+
+.summary-item p {
+    font-size: 2rem;
+    color: #00bcd4;
+}
+
+/* Transactions Table */
+.transactions-container {
+    background-color: #1f1f1f;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.transactions-container h2 {
+    font-size: 2rem;
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 1rem;
+}
+
+.transactions-table th, .transactions-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #555;
+}
+
+.transactions-table th {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+.transactions-table td {
+    background-color: #222222;
+    color: #E0E0E0;
+}
+
+.transactions-table tr:nth-child(even) td {
+    background-color: #333333;
+}
+
+.transactions-table tr:hover {
+    background-color: #444444;
+    cursor: pointer;
+}
+
+.transactions-table td:nth-child(4) {
+    font-weight: bold;
+}
+
+.transactions-table td:nth-child(1),
+.transactions-table td:nth-child(2) {
+    text-transform: capitalize;
+}
+
+/* Dropdown menu styling */
+select {
+    background-color: #333333;
+    color: #E0E0E0;
+    border-radius: 8px;
+    padding: 12px;
+    border: 1px solid #555;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1rem;
+}
+
+option {
+    background-color: #1f1f1f;
+    color: #E0E0E0;
+}
+
+/* Input Fields */
+input[type="date"], input[type="text"], input[type="number"] {
+    background-color: #333333;
+    color: #E0E0E0;
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid #555;
+    width: 100%;
+    font-size: 1rem;
+}
+
+input[type="date"]:focus, input[type="text"]:focus, input[type="number"]:focus {
+    outline: none;
+    border-color: #00bcd4;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .analytics-summary {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .filters {
+        padding: 15px;
+    }
+
+    .transactions-container {
+        padding: 20px;
+    }
+
+    .transactions-table th, .transactions-table td {
+        padding: 10px;
+    }
+
+    .summary-item {
+        padding: 15px;
+    }
+}
+
+/* Smooth Scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #888;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #121212;
+}
+
+/* Additional Styling for Interactive Elements */
+button:focus, select:focus, input:focus {
+    outline: none;
+    border: 2px solid #00bcd4;
+    background-color: #333333;
+}
+
+/* Shadow Effects */
+.box-shadow {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+}
+
+.card {
+    background-color: #1f1f1f;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Hover Effects for Buttons */
+button:hover {
+    background-color: #0097a7;
+    transition: background-color 0.3s ease;
+}
+
+select:hover, input:hover {
+    background-color: #444444;
+    transition: background-color 0.3s ease;
+}
+
+/* Table Hover */
+.transactions-table tr:hover {
+    background-color: #444444;
+    cursor: pointer;
+}
+
+/* Miscellaneous */
+.card-header {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #00bcd4;
+    margin-bottom: 15px;
+}
+
+.card-body {
+    font-size: 1rem;
+    color: #E0E0E0;
+}
+
+footer {
+    background-color: #1f1f1f;
+    padding: 20px;
+    color: #B0B0B0;
+    text-align: center;
+    font-size: 1rem;
+}
+
+footer a {
+    color: #00bcd4;
+    text-decoration: none;
+}

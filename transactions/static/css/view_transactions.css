@@ -1,0 +1,166 @@
+/* Global Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1e1e2f; /* Dark purple-blue background */
+    color: #ffffff; /* White text for contrast */
+}
+
+/* Header Section */
+.header {
+    text-align: center;
+    padding: 20px 0;
+    background-color: #2c3e50; /* Deep blue-gray */
+    color: #00cec9; /* Vibrant cyan */
+    border-bottom: 5px solid #00cec9;
+}
+
+.header h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.header p {
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.header .button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3498db; /* Soft blue */
+    color: white;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-top: 10px;
+}
+
+.header .button:hover {
+    background-color: #2980b9; /* Darker blue on hover */
+    transform: scale(1.05);
+}
+
+/* Add Buttons Section */
+.add-buttons {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.add-buttons .button {
+    margin: 0 10px;
+    background-color: #27ae60; /* Green for actions */
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.add-buttons .button:hover {
+    background-color: #2ecc71; /* Softer green on hover */
+    transform: scale(1.05);
+}
+
+/* Transactions Table */
+.transactions-container {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+    overflow-x: auto;
+}
+
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #34495e; /* Neutral gray-blue */
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.transactions-table th, 
+.transactions-table td {
+    padding: 15px 20px;
+    text-align: center;
+    color: #ecf0f1; /* Light gray text */
+}
+
+.transactions-table th {
+    background-color: #2c3e50; /* Dark header */
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.transactions-table tr:nth-child(even) {
+    background-color: #3d566e; /* Alternate row color */
+}
+
+.transactions-table tr:hover {
+    background-color: #576f89; /* Hover effect on rows */
+    cursor: pointer;
+}
+
+.transactions-table td .button {
+    display: inline-block;
+    margin: 0 5px; /* Add space between Update and Delete buttons */
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.transactions-table td .update {
+    background-color: #3498db; /* Blue for Update */
+    color: white;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.transactions-table td .update:hover {
+    background-color: #2980b9; /* Darker blue on hover */
+    transform: scale(1.05);
+}
+
+.transactions-table td .delete {
+    background-color: #e74c3c; /* Red for Delete */
+    color: white;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.transactions-table td .delete:hover {
+    background-color: #c0392b; /* Darker red on hover */
+    transform: scale(1.05);
+}
+
+/* Amount Styles */
+.income {
+    color: #27ae60 !important; /* Green for income */
+    font-weight: bold;
+}
+
+.expense {
+    color: #e74c3c !important; /* Red for expense */
+    font-weight: bold;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .transactions-table th, 
+    .transactions-table td {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .add-buttons .button {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+}

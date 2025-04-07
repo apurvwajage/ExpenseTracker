@@ -1,0 +1,72 @@
+/* Reset some default styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #121212; /* Dark background color */
+    color: #e0e0e0; /* Light text color */
+}
+
+.form-container {
+    max-width: 400px; /* Set a max width for the form */
+    margin: 50px auto; /* Center the form on the page */
+    padding: 20px;
+    background-color: #1e1e1e; /* Darker background for the form */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Deeper shadow for depth */
+}
+
+h2 {
+    text-align: center; /* Center the heading */
+    color: #ffffff; /* White text color for the heading */
+}
+
+label {
+    display: block; /* Make labels block elements */
+    margin-bottom: 5px; /* Space between label and input */
+    font-weight: bold; /* Bold labels */
+    color: #ffffff; /* White text color for labels */
+}
+
+input[type="number"],
+input[type="text"],
+input[type="date"],
+select {
+    width: 100%; /* Full width inputs */
+    padding: 10px; /* Padding inside inputs */
+    margin-bottom: 20px; /* Space between inputs */
+    border: 1px solid #444; /* Dark border */
+    border-radius: 4px; /* Rounded corners */
+    font-size: 16px; /* Font size */
+    background-color: #333; /* Dark background for inputs */
+    color: #e0e0e0; /* Light text color for inputs */
+    transition: border-color 0.3s; /* Smooth transition for border color */
+}
+
+input[type="number"]:focus,
+input[type="text"]:focus,
+input[type="date"]:focus,
+select:focus {
+    border-color: #007bff; /* Change border color on focus */
+    outline: none; /* Remove default outline */
+}
+
+.button {
+    width: 100%; /* Full width button */
+    padding: 10px; /* Padding inside button */
+    background-color: #007bff; /* Primary button color */
+    color: white; /* White text color */
+    border: none; /* Remove border */
+    border-radius: 4px; /* Rounded corners */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition for background color */
+}
+
+.button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+.form-group {
+    text-align: center; /* Center the button */
+}

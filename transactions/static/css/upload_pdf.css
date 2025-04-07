@@ -1,0 +1,85 @@
+/* Global Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1e1e2f; /* Dark purple-blue background for elegance */
+    color: #ffffff; /* White text for contrast */
+    overflow-x: hidden;
+}
+
+/* Container for the upload form */
+.container {
+    max-width: 600px; /* Maximum width for the container */
+    margin: 40px auto; /* Center the container */
+    padding: 20px; /* Padding inside the container */
+    background-color: #2d3436; /* Neutral dark gray */
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+    text-align: center; /* Center text */
+}
+
+/* Heading */
+.container h2 {
+    font-size: 24px; /* Font size for the heading */
+    margin-bottom: 20px; /* Space below the heading */
+    color: #00cec9; /* Vibrant cyan text */
+}
+
+/* Upload Form */
+.upload-form {
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center; /* Center items horizontally */
+}
+
+/* Label for file input */
+.upload-form label {
+    font-size: 16px; /* Font size for the label */
+    margin-bottom: 10px; /* Space below the label */
+    color: #dfe6e9; /* Light gray text */
+}
+
+/* File input */
+.upload-form input[type="file"] {
+    margin-bottom: 20px; /* Space below the file input */
+    padding: 10px; /* Padding inside the file input */
+    border: 1px solid #00cec9; /* Border color */
+    border-radius: 5px; /* Rounded corners */
+    background-color: #2c2c54; /* Background color */
+    color: #ffffff; /* Text color */
+}
+
+/* Submit button */
+.upload-form button {
+    padding: 12px 20px; /* Padding for the button */
+    background-color: #0984e3; /* Bright blue */
+    color: white; /* Text color */
+    border: none; /* No border */
+    border-radius: 30px; /* Rounded corners */
+    font-size: 14px; /* Font size */
+    font-weight: bold; /* Bold text */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transition effects */
+}
+
+/* Button hover effect */
+.upload-form button:hover {
+    background-color: #74b9ff; /* Softer blue on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px; /* Adjust padding for smaller screens */
+    }
+
+    .container h2 {
+        font-size: 20px; /* Smaller font size for heading */
+    }
+
+    .upload-form button {
+        font-size: 12px; /* Smaller font size for button */
+    }
+}

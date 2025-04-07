@@ -1,0 +1,22 @@
+# Ignore the virtual environment folder
+myenv/
+
+# Python cache files inside app folders
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django environment variables (secret keys, API tokens)
+.env
+
+# Static files collected for deployment (e.g., via collectstatic)
+staticfiles/
+
+# Ignore media uploads if you're storing user uploads locally (optional)
+media/
+
+# Optional: Ignore local IDE config files (just in case you or your team uses VSCode later)
+.vscode/
+
+# Optional: If you ever add logs
+*.log

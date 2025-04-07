@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block title %}View Transaction - Expense Tracker{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/view_transaction.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Transaction Details Section -->
+<div class="transaction-details">
+    <h2>Transaction Details</h2>
+
+	<!-- Category -->
+    <div class="detail">
+        <label>Category:</label>
+        <span class="value">{{transaction.category}}</span>
+    </div>
+    
+    <!-- Type -->
+    <div class="detail">
+        <label>Transaction Type:</label>
+        <span class="value">{{transaction.transaction_type}}</span>
+    </div>
+
+    <!-- Amount -->
+    <div class="detail">
+        <label>Amount:</label>
+        <span class="<%= amountClass %>">{{transaction.amount}}</span>
+    </div>
+
+    <!-- Description -->
+    <div class="detail">
+        <label>Description:</label>
+        <span class="value">{{transaction.description}}</span>
+    </div>
+
+    <!-- Date -->
+    <div class="detail">
+        <label>Date:</label>
+        <span class="value">{{transaction.date}}</span>
+    </div>
+</div>
+
+<!-- Back Button -->
+<div style="text-align: center; margin-top: 20px;">
+    <a href="{% url 'transactions:view_transactions'%}" class="button">Back to Transactions</a>
+</div>
+{% endblock %}

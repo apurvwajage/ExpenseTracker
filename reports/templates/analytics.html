@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Analytics{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/analytics.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header -->
+    <header class="header">
+        <h1>Analytics</h1>
+        <p>Analyze your income and expenses.</p>
+    </header>
+
+    <!-- Filters -->
+    <div class="filters">
+    <form method="GET" action="{% url 'reports:analytics' %}">
+
+        <!-- Start Date Filter -->
+        <div class="filter-item">
+            <label for="start_date">{{form.start_date.label}}</label>
+            {{form.start_date}}
+        </div>
+
+        <!-- End Date Filter -->
+        <div class="filter-item">
+            <label for="end_date">{{form.end_date.label}}</label>
+            {{form.end_date}}
+        </div>
+
+        <!-- Category Filter -->
+        <div class="filter-item">
+            <label for="category">{{form.category.label}}</label>
+            {{form.category}}
+        </div>
+
+        <!-- Transaction Type Filter -->
+        <div class="filter-item">
+            <label for="transaction_type">{{form.transaction_type.label}}</label>
+            {{form.transaction_type}}
+        </div>
+
+        <!-- Amount Range Filter -->
+        <div class="filter-item">
+            <label for="min_amount">{{form.min_amount.label}}</label>
+            {{form.min_amount}}
+        </div>
+
+        <div class="filter-item">
+            <label for="max_amount">{{form.max_amount.label}}</label>
+            {{form.max_amount}}
+        </div>
+
+        <!-- Submit Button -->
+        <div class="filter-item">
+            <button type="submit">Apply Filters</button>
+        </div>
+    </form>
+</div>
+
+
+<!-- Key Analytics -->
+<div class="analytics-summary">
+    <div class="summary-item">
+        <h2>Total Income</h2>
+        <p>{{total_income}}</p>
+    </div>
+    <div class="summary-item">
+        <h2>Total Expense</h2>
+        <p>{{total_expense}}</p>
+    </div>
+    <div class="summary-item">
+        <h2>Net Balance</h2>
+        <p>{{balance}}</p>
+    </div>
+</div>
+
+
+    <!-- Transactions Table -->
+    <div class="transactions-container">
+        <h2>Transactions</h2>
+        <table class="transactions-table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                    <tr>
+                        <td>{{transaction.transaction_type}}</td>
+                        <td>{{transaction.category}}</td>
+                        <td>{{transaction.description}}</td>
+                        <td>{{transaction.amount}}</td>
+                        <td>{{transaction.date}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

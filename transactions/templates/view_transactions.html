@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}View Transactions{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/view_transactions.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="header">
+    <h1>Transactions</h1>
+    <p>Manage all your income and expenses.</p>
+    <a href="/dashboard/" class="button">Back to Dashboard</a>
+</div>
+
+<!-- Add Buttons Section -->
+<div class="add-buttons">
+    <a href="{%url 'transactions:add_income'%}" class="button">Add Income</a>
+    <a href="{% url 'transactions:add_expense'%}" class="button">Add Expense</a>
+    <a href="{% url 'transactions:upload_pdf'%}" class="button">Upload a PDF</a>
+</div>
+
+<!-- Transactions Table -->
+<div class="transactions-container">
+    <table class="transactions-table">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Actions</th>
+                <th>File</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+                <tr onclick="viewTransaction('{{ transaction.pk }}')">
+                    <td>{{ transaction.transaction_type }}</td>
+                    <td>{{ transaction.category }}</td>
+                    <td>{{ transaction.amount }}</td>
+                    <td>{{ transaction.date }}</td>
+                    <td>
+                        <a href="{% url 'transactions:update' transaction.pk %}" class="button update">Edit</a>
+                        <a href="{% url 'transactions:delete' transaction.pk %}" class="button delete">Delete</a>
+                    </td>
+                    <td>
+                        {% if transaction.fileName %}
+                                    <a href="{{ transaction.fileName }}" target="_blank" onclick="event.stopPropagation();">
+                                        <ion-icon name="document"></ion-icon>
+                                    </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script>
+    // JavaScript function to view transaction details
+    function viewTransaction(transactionId) {
+    // Your logic to handle the transaction view
+    console.log("Viewing transaction with ID:", transactionId);
+    // For example, you could redirect to a detail page:
+    window.location.href = `/transactions/view_transaction/${transactionId}/`; // Adjust the URL as needed
+    }
+</script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.js"></script>
+{% endblock %}

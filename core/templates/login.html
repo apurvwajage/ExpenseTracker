@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Expense Tracker - Login
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+
+{% if success_message %}
+    <div style="color: green;">{{ success_message }}</div>
+{% endif %}
+
+<div class="container">
+    <div class="header">
+        <h1>Expense Tracker</h1>
+        <p>Login to access your account and manage your expenses efficiently.</p>
+    </div>
+
+    <!-- Login Form -->
+    <div class="form-container">
+        <form action="/login/" method="POST" class="form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="email">{{ form.email.label }}</label>
+                {{ form.email }}
+            </div>
+        
+            <div class="form-group">
+                <label for="password">{{ form.password.label }}</label>
+                {{ form.password }}
+            </div>
+            {% if success_message %}
+                <div style="color: green;">{{ success_message }}</div>
+            {% endif %}
+                {% if error_message %}
+                <p style="color: red;">{{ error_message }}</p>
+                {% endif %}
+
+                {% if form_errors %}
+                <ul style="color: red;">
+                    {% for field, errors in form_errors.items %}
+                        <li>{{ field }}: {{ errors|join:", " }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+            <div class="form-group">
+                <button type="submit" class="button">Login</button>
+            </div>
+
+            <p>Don't have an account? <a href="/register/" style="color: #00bcd4;">Register here</a></p>
+        </form>
+    </div>
+    </div>
+    
+{% endblock %}

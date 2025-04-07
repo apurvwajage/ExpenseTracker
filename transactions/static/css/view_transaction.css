@@ -1,0 +1,104 @@
+/* Global Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #212121; /* Dark background */
+    color: #e0e0e0; /* Light text color for contrast */
+}
+
+/* Transaction Details Container */
+.transaction-details {
+    width: 90%;
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: #37474f; /* Dark card background */
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: left;
+}
+
+/* Heading Styling */
+.transaction-details h2 {
+    text-align: center;
+    font-size: 28px;
+    color: #00bcd4; /* Light cyan color */
+    margin-bottom: 20px;
+}
+
+/* Detail Styling */
+.detail {
+    margin-bottom: 15px;
+}
+
+.detail label {
+    font-weight: bold;
+    color: #b0bec5; /* Subtle gray color */
+    display: inline-block;
+    width: 120px; /* Aligns labels uniformly */
+}
+
+.detail .value {
+    color: #e0e0e0; /* Light text for values */
+    font-size: 16px;
+}
+
+/* Amount Styling */
+.amount {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.income {
+    color: #28a745; /* Green for income */
+}
+
+.expense {
+    color: #dc3545; /* Red for expense */
+}
+
+/* Back Button */
+.button {
+    display: inline-block;
+    background-color: #00bcd4; /* Cyan button */
+    color: #fff; /* White text */
+    padding: 12px 25px;
+    font-size: 16px;
+    border-radius: 25px;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 20px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.button:hover {
+    background-color: #039be5; /* Darker cyan on hover */
+    transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .transaction-details {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .transaction-details h2 {
+        font-size: 24px;
+    }
+
+    .detail label {
+        width: 100px; /* Adjust label width for smaller screens */
+    }
+
+    .amount {
+        font-size: 20px;
+    }
+
+    .button {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+}

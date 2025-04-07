@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Expense Tracker - Home
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>Welcome to Expense Tracker</h1>
+        <p>Track your expenses and manage your finances effortlessly.</p>
+    </div>
+
+    <!-- Options: Register or Login -->
+    <div class="options">
+        <div class="option">
+            <h2>New User?</h2>
+            <p>Create a new account to start tracking your expenses.</p>
+            <a href="/register/"  class="button">Register</a>
+        </div>
+        <div class="option">
+            <h2>Existing User?</h2>
+            <p>Already have an account? Log in to manage your expenses.</p>
+            <a href="/login/" class="button">Login</a>
+        </div>
+    </div>
+
+    <!-- Additional Info or Features -->
+    <div class="info">
+        <h3>Features</h3>
+        <ul>
+            <li>Track your expenses by category</li>
+            <li>View detailed reports and analytics</li>
+            <li>Set budgets and see spending trends</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

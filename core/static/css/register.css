@@ -1,0 +1,140 @@
+/* Global Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #212121;  /* Dark background */
+    color: #e0e0e0;  /* Light text color for contrast */
+}
+
+/* Main container */
+.container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+/* Header Styling */
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.header h1 {
+    font-size: 42px;
+    color: #00bcd4;  /* Light cyan color for a sleek, modern look */
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.header p {
+    font-size: 18px;
+    color: #b0bec5;  /* Subtle gray color */
+    line-height: 1.5;
+    margin-bottom: 40px;
+}
+
+/* Form Container */
+.form-container {
+    background-color: #37474f;  /* Dark card background */
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    margin: 0 auto;
+    color: #fff;
+}
+
+/* Form Styling */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #b0bec5;  /* Light gray text for labels */
+}
+
+input {
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #00bcd4;
+    border-radius: 8px;
+    background-color: #455a64;  /* Slightly lighter background */
+    color: #fff;
+    outline: none;
+}
+
+input:focus {
+    border-color: #00bcd4;
+    box-shadow: 0 0 5px rgba(0, 188, 212, 0.8);  /* Light blue glow on focus */
+}
+
+/* Submit Button */
+button {
+    background-color: #00bcd4;  /* Cyan button color */
+    color: white;
+    padding: 12px 30px;
+    font-size: 18px;
+    border-radius: 30px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    border: none;
+}
+
+button:hover {
+    background-color: #039be5;  /* Darker cyan on hover */
+    transform: scale(1.05);
+}
+
+/* Footer Links */
+p {
+    font-size: 16px;
+    color: #b0bec5;
+}
+
+a {
+    color: #00bcd4;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 32px;
+    }
+
+    .header p {
+        font-size: 16px;
+    }
+
+    .form-container {
+        padding: 30px;
+    }
+
+    .form-container h2 {
+        font-size: 28px;
+    }
+
+    .form-group input {
+        font-size: 14px;
+    }
+
+    button {
+        font-size: 16px;
+    }
+}

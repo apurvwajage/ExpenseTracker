@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Update Transaction - Expense Tracker{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/update_transaction.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Update Transaction Form -->
+<div class="container">
+    <h1>Update Transaction</h1>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <!-- Hidden input for transaction ID -->
+        <input type="hidden" name="transaction_id" value="<%= transactionId %>">
+
+        <div class="form-group">
+            <label for="transactionType">{{form.transaction_type.label}}</label>
+            {{form.transaction_type}}
+        </div>
+
+        <div class="form-group">
+            <label for="category">{{form.category.label}}</label>
+            {{form.category}}
+        </div>
+
+        <div class="form-group">
+            <label for="description">{{form.description.label}}</label>
+            {{form.description}}
+        </div>
+
+        <div class="form-group">
+            <label for="amount">{{form.amount.label}}</label>
+            {{form.amount}}
+        </div>
+
+        <div class="form-group">
+            <label for="date">{{form.date.label}}</label>
+            {{form.date}}
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="button">Update</button>
+            <a href="{% url 'transactions:view_transactions' %}" class="button cancel">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Expense Tracker - Register
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/register.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    {% if success %}
+        <div id="success-message" style="color: green;">
+            Registration successful! Redirecting to login page...
+        </div>
+        <script>
+            setTimeout(function() {
+                window.location.href = "{% url 'core:login' %}"; // Change 'login' to your actual login URL name
+            }, 2000);
+        </script>
+    {%else%}
+    <div class="header">
+        <h1>Expense Tracker</h1>
+        <p>Create your account to start managing your expenses.</p>
+    </div>
+
+    <!-- Registration Form -->
+    <div class="form-container">
+        <form action="/register/" method="POST" class="form">
+            {% csrf_token %}
+            <!-- Username Field -->
+            <div class="form-group">
+                <label for="username">{{ form.username.label}}</label>
+                {{ form.username }}
+            </div>
+
+            <!-- Email Field -->
+            <div class="form-group">
+                <label for="email">{{ form.email.label }}</label>
+                {{ form.email }}
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <label for="password">{{form.password.label}}</label>
+                {{form.password}}
+            </div>
+            
+            <!-- Submit Button -->
+            <div class="form-group">
+                <button type="submit" class="button">Register</button>
+            </div>
+
+            <p>Already have an account? <a href="/login/" style="color: #00bcd4;">Login here</a></p>
+        </form>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

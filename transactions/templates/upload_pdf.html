@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/upload_pdf.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Upload PDF File</h2>
+    <form action="{% url 'transactions:upload_pdf' %}" method="POST" enctype="multipart/form-data" class="upload-form">
+        {% csrf_token %}
+        <label for="file">{{form.pdf.label}}</label>
+        {{form.pdf}}
+        <br>
+        <button type="submit">Upload</button>
+    </form>
+</div>
+{% endblock %}

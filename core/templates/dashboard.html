@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Dashboard{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="header">
+    <h1>Welcome to Expense Tracker</h1>
+    <p>Hello, <b>{{ username }}</b>! Here's an overview of your finances.</p>
+    <a href="{% url 'core:logout' %}" class="logout-button">Logout</a>
+</div>
+
+<!-- Dashboard Content -->
+<div class="dashboard-container">
+
+    <!-- Account Summary Section -->
+    <div class="card">
+        <h2>Account Summary</h2>
+        <p>Total Income: <b>{{total_income}}</b></p>
+        <p>Total Expenses: <b>{{total_expenses}}</b></p>
+        <p>Remaining Balance: <b>{{net_balance}}</b></p>
+    </div>
+
+    <div class="card">
+        <h2>Recent Transactions</h2>
+        <ul>
+            {% for transaction in recent_transactions %}
+                <li>{{ transaction.date }} - {{ transaction.description }}: {{ transaction.amount }}</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'transactions:view_transactions' %}" class="button">View All Transactions</a>
+    </div>
+
+    <!-- Quick Actions Section -->
+    <div class="card">
+        <h2>Quick Actions</h2>
+        <a href="{% url 'transactions:add_income' %}" class="button">Add Income</a>
+        <a href="{% url 'transactions:add_expense' %}" class="button">Add Expense</a>
+        <a href="{% url 'reports:analytics' %}" class="button">View Analytics</a>
+        <a href="{% url 'transactions:upload_pdf' %}" class="button">Upload PDF</a>
+    </div>
+</div>
+
+<div class="card">
+    <h2>Expenditure by Category</h2>
+    <ul>
+        {% for expense in expenditure_by_category %}
+            <li>{{ expense.category }}: {{ expense.total_amount }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

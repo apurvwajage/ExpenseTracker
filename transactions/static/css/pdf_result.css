@@ -1,0 +1,145 @@
+/* Global Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1e1e2f; /* Dark purple-blue background for elegance */
+    color: #ffffff; /* White text for contrast */
+    overflow-x: hidden;
+}
+
+
+/* Existing styles... */
+.add-button {
+    background-color: #00bcd4; /* Cyan background */
+    color: white; /* White text */
+    padding: 10px 20px; /* Padding for the button */
+    font-size: 16px; /* Font size */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transition effects */
+}
+
+.add-button:hover {
+    background-color: #039be5; /* Darker cyan on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Filter Styles */
+.filter-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #2d3436; /* Dark gray for filter background */
+    border-radius: 8px;
+}
+
+.filter-container input,
+.filter-container select {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #44475a; /* Darker gray for input fields */
+    color: #ffffff; /* White text */
+    font-size: 16px;
+    margin-right: 10px; /* Space between inputs */
+}
+
+.filter-container button {
+    background-color: #0984e3; /* Bright blue */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.filter-container button:hover {
+    background-color: #74b9ff; /* Softer blue on hover */
+}
+
+/* Header Styles */
+h1 {
+    text-align: center;
+    margin: 40px 0; /* Space above and below the heading */
+    font-size: 28px; /* Font size for the heading */
+    color: #00cec9; /* Vibrant cyan text */
+}
+
+/* Table Styles */
+table {
+    width: 90%; /* Full width of the container */
+    margin: 0 auto; /* Center the table */
+    border-collapse: collapse; /* Remove space between borders */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+    background-color: #2d3436; /* Dark background for the table */
+    border-radius: 8px; /* Rounded corners */
+}
+
+/* Table Header Styles */
+thead {
+    background-color: #2c2c54; /* Deep blue-gray for the header */
+}
+
+th {
+    padding: 12px; /* Padding for table headers */
+    text-align: left; /* Align text to the left */
+    color: #00cec9; /* Vibrant cyan text */
+    font-weight: bold; /* Bold text */
+}
+
+/* Table Body Styles */
+tbody tr {
+    transition: background-color 0.3s ease; /* Transition for hover effect */
+}
+
+tbody tr:hover {
+    background-color: #3b3b58; /* Darker shade on hover */
+}
+
+td {
+    padding: 10px; /* Padding for table cells */
+    border-bottom: 1px solid #444; /* Bottom border for cells */
+    color: #dfe6e9; /* Light gray text */
+}
+
+/* No Data Found Message */
+p {
+    text-align: center; /* Center the message */
+    font-size: 18px; /* Font size for the message */
+    color: #d63031; /* Bright red for attention */
+}
+
+.add-button {
+    background-color: #00bcd4; /* Cyan background */
+    color: white; /* White text */
+    padding: 10px 20px; /* Padding for the button */
+    font-size: 16px; /* Font size */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transition effects */
+}
+
+.add-button:hover {
+    background-color: #039be5; /* Darker cyan on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 24px; /* Smaller font size for heading */
+    }
+
+    table {
+        width: 100%; /* Full width on smaller screens */
+    }
+
+    th, td {
+        font-size: 14px; /* Smaller font size for table cells */
+    }
+}

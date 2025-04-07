@@ -1,0 +1,138 @@
+/* Global Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1e1e2f; /* Dark purple-blue background for elegance */
+    color: #ffffff; /* White text for contrast */
+    overflow-x: hidden;
+}
+
+/* Header Section */
+.header {
+    text-align: center;
+    padding: 30px;
+    background-color: #2c2c54; /* Deep blue-gray */
+    color: #00cec9; /* Vibrant cyan text */
+    position: relative;
+    border-bottom: 5px solid #00cec9;
+}
+
+.header h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.header p {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.logout-button {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background-color: #d63031; /* Bright red for attention */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.logout-button:hover {
+    background-color: #e74c3c; /* Softer red on hover */
+    transform: scale(1.05);
+}
+
+/* Dashboard Container */
+.dashboard-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+/* Dashboard Cards */
+.card {
+    background-color: #2d3436; /* Neutral dark gray */
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+}
+
+.card h2 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    color: #00cec9;
+}
+
+.card p {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #dfe6e9; /* Light gray text */
+}
+
+.card ul {
+    list-style: none;
+    padding: 0;
+    color: #b2bec3;
+    text-align: left;
+}
+
+.card ul li {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+/* Buttons */
+.button {
+    display: inline-block;
+    padding: 12px 20px;
+    background-color: #0984e3; /* Bright blue */
+    color: white;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.button:hover {
+    background-color: #74b9ff; /* Softer blue on hover */
+    transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 28px;
+    }
+
+    .header p {
+        font-size: 16px;
+    }
+
+    .dashboard-container {
+        grid-template-columns: 1fr;
+    }
+
+    .logout-button {
+        font-size: 12px;
+        padding: 8px 15px;
+    }
+}
+

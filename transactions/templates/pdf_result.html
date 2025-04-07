@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Expense Tracker
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/pdf_result.css' %}">
+{% endblock %}
+
+{% block content %}
+    <!-- Filter Section -->
+    <div class="filter-container">
+        <div>
+            <label for="startDate">Start Date:</label>
+            <input type="date" id="startDate" name="startDate">
+            <label for="endDate">End Date:</label>
+            <input type="date" id="endDate" name="endDate">
+        </div>
+        <div>
+            <label for="transactionType">Transaction Type:</label>
+            <select id="transactionType" name="transactionType">
+                <option value="">All</option>
+                <option value="DEBIT">Debit</option>
+                <option value="CREDIT">Credit</option>
+            </select>
+            <button type="button" onclick="filterTransactions()">Filter</button>
+        </div>
+    </div>
+
+    <form action="{% url 'transactions:save_pdf_transactions' %}" method="post"> <!-- Form to submit selected transactions -->
+        {% csrf_token %}
+        <div style="text-align: center; margin-top: 20px;">
+            <button type="submit" class="add-button">Upload Selected Transactions</button> <!-- Button to submit the form -->
+        </div>
+        <table border="1" id="transactionsTable">
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Description</th>
+                    <th>Transaction ID</th>
+                    <th>Category</th>
+                </tr>
+            </thead>
+            {% for match in matches_list %}
+            <tr class="transaction-row" data-date="{{match.formatted_date}}" data-type="{{match.type}}">
+                <td><input type="checkbox" name="selectedTransactions" value="{{match.transaction_id}}"></td>
+                <td>
+                    {{match.date}}
+                    <input type="hidden" name="date_{{match.transaction_id}}" value="{{match.formatted_date}}">
+                </td>
+                <td>
+                    {{match.time}}
+                    <input type="hidden" name="time_{{match.transaction_id}}" value="{{match.time}}">
+                </td>
+                <td>
+                    {{match.type}}
+                    <input type="hidden" name="type_{{match.transaction_id}}" value="{{match.type}}">
+                </td>
+                <td>
+                    {{match.amount}}
+                    <input type="hidden" name='amount_{{match.transaction_id}}'' value="{{match.amount}}"> <!-- Hidden input for amount -->
+                </td>
+                <td>
+                    <input type="text" name="details_{{match.transaction_id}}" value="{{match.details}}" required>
+                </td>
+                <td>{{match.transaction_id}}</td>
+                <td>
+                    <select name="category_{{match.transaction_id}}" id="details_{{match.transaction_id}}">
+                        <option value="" disabled selected>Select a category</option>
+                        <option value="Rent">Rent</option>
+                        <option value="Groceries">Groceries</option>
+                        <option value="Insurance">Insurance</option>
+                        <option value="Healthcare"> Healthcare</option>
+                        <option value="Food">Food</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Utilities">Utilities</option>
+                        <option value="Shopping">Shopping</option>
+                        <option value="Financial">Financial</option>
+                        <option value="Household">Household</option>
+                        <option value="Miscellaneous">Miscellaneous</option>
+                        <option value="Primary Income">Primary Income</option>
+                        <option value="Passive Income">Passive Income</option>
+                        <option value="Other Income">Other Income</option>
+                        <option value="Other">Other</option>
+                </td>
+                <td>
+                    <input type="hidden" name='fileName_{{match.transaction_id}}'' value="{{file_name}}"> <!-- Hidden input for amount -->
+                </td>
+            </tr>
+            
+        {% endfor %}
+    </tbody>
+</table>
+<div style="text-align: center; margin-top: 20px;">
+    <button type="submit" class="add-button">Upload Selected Transactions</button> <!-- Button to submit the form -->
+</div>
+</form>
+
+<script>
+    function filterTransactions() {
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        const transactionType = document.getElementById('transactionType').value;
+
+        const rows = document.querySelectorAll('.transaction-row');
+        const startDateObj = startDate ? new Date(startDate + 'T00:00:00') : null; // Set time to midnight
+        const endDateObj = endDate ? new Date(endDate + 'T23:59:59') : null; // Set time to end of the day
+        rows.forEach(row => {
+            const rowDate = row.getAttribute('data-date');
+            const rowType = row.getAttribute('data-type');
+
+            // Create Date objects for comparison
+            const rowDateObj = new Date(rowDate);
+
+            // Check date range
+            const dateInRange = (!startDateObj || rowDateObj >= startDateObj) &&
+                                (!endDateObj || rowDateObj <= endDateObj);
+
+            // Check transaction type
+            const typeMatches = !transactionType || rowType === transactionType;
+
+            // Show or hide the row based on filters
+            if (dateInRange && typeMatches) {
+                row.style.display = ''; // Show row
+            } else {
+                row.style.display = 'none'; // Hide row
+            }
+        });
+    }
+    </script>
+{% endblock %}

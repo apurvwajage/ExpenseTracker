@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Add Income{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/add_income.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="form-container">
+    <h2>Add Income</h2>
+    <form action="{% url 'transactions:add_income'%}" method="POST">
+        {% csrf_token %}
+        <label for="amount">{{ form.amount.label }}</label>
+        {{form.amount}}
+
+        <label for="category">{{ form.category.label }}</label>
+        {{form.category}}
+
+        <label for="description">{{ form.description.label }}</label>
+        {{form.description}}
+
+        <label for="date">{{ form.date.label }}</label>
+        {{form.date}}
+
+        <div class="form-group">
+            <button type="submit" class="button">Submit</button>
+        </div>
+
+{% endblock %}

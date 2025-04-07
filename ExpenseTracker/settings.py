@@ -86,15 +86,6 @@ WSGI_APPLICATION = 'ExpenseTracker.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     #----------------PostgreSQL----------------
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'postgres',
-    #     'USER': 'postgres.xvtufldusdkeqjxcqfxk',
-    #     'PASSWORD': 'apurvvW@8903',
-    #     'HOST': 'aws-0-ap-south-1.pooler.supabase.com',
-    #     'PORT': '6543',
-    # }
     'default': dj_database_url.config(default=config('DATABASE_URL'))
 }
 

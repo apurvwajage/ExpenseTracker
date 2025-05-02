@@ -45,6 +45,7 @@ Follow these steps to set up the project locally:
     pip install -r requirements.txt
 
 4. **Configure the database**:
+    ```python
     DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -57,11 +58,11 @@ Follow these steps to set up the project locally:
     }
 
 5. **Apply migrations**:
-    '''bash
+    ```bash
     python manage.py makemigrations
     python manage.py migrate
 
 6. **Run the server**:
-    '''bash
+    ```bash
     python manage.py runserver
 

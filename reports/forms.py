@@ -2,7 +2,8 @@ from django import forms
 
 
 
-choices=[('Rent','Rent'),
+choices=[('',''),
+        ('Rent','Rent'),
         ('Grocesries','Groceries'),
         ('Insurance','Insurance'),
         ('Healthcare','Healthcare'),
@@ -26,4 +27,4 @@ class filters(forms.Form):
     category = forms.ChoiceField(choices=choices, required=False, widget=forms.Select(attrs={'id':'category'}))
     min_amount = forms.DecimalField(required=False, widget=forms.NumberInput(attrs={'placeholder': 'Min Amount', 'id':'min_amount'}))
     max_amount = forms.DecimalField(required=False, widget=forms.NumberInput(attrs={'placeholder': 'Max Amount', 'id':'max_amount'}))
-    transaction_type = forms.ChoiceField(choices=[('Income', 'Income'), ('Expense', 'Expense')], required=False,widget=forms.Select(attrs={'id':'transaction_type'}))
+    transaction_type = forms.ChoiceField(choices=[('',''), ('Income', 'Income'), ('Expense', 'Expense')], required=False,widget=forms.Select(attrs={'id':'transaction_type'}))

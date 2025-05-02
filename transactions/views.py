@@ -272,11 +272,15 @@ def data_extraction(pdf_file):
             text += page.get_text("text")  # Extract text from each page
 
         # Convert the extracted text to a single line and clean it
-        single_line_text = ' '.join(text.split())
+        single_line_text = ''.join(text.split())
         single_line_text = single_line_text.replace("\x01", "")  # Remove unwanted characters
+        single_line_text = re.sub(r'(\d{1,2})f(\d{1,2}\s*[APMapm]{2})', r'\1:\2', single_line_text)
+        
+
+        print(single_line_text)
 
         # Define the regex pattern
-        pattern = r"(\w{3}\d{2},\d{4}) (\d{1,2}:\d{2}\s*[APM]{2}) (DEBIT|CREDIT) ₹(\d{1,3}(?:,\d{3})*(?:\.\d{2})?) (\w+(?:\s+\w+)*) (TransactionID[A-Z0-9]+)"
+        pattern = r"(\w{3}\d{2},\d{4})(\d{1,2}:\d{2}[APMapm]{2})(DEBIT|CREDIT)₹(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)(\w+(?:\s+\w+)*)(TransactionID[A-Z0-9]+\d{1})"
 
         # Find matches using the regex pattern
         matches = re.finditer(pattern, single_line_text)

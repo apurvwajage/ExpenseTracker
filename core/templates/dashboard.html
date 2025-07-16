@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
 {% block title %}Dashboard{% endblock %}
 
 {% block css %}
@@ -9,50 +8,189 @@
 {% endblock %}
 
 {% block content %}
-<!-- Header Section -->
-<div class="header">
-    <h1>Welcome to Expense Tracker</h1>
-    <p>Hello, <b>{{ username }}</b>! Here's an overview of your finances.</p>
-    <a href="{% url 'core:logout' %}" class="logout-button">Logout</a>
-</div>
+<!-- Theme Toggle Button -->
+<button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+    <span id="theme-icon">🌙</span>
+</button>
 
-<!-- Dashboard Content -->
-<div class="dashboard-container">
+<!-- Mobile Menu Toggle -->
+<button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
 
-    <!-- Account Summary Section -->
-    <div class="card">
-        <h2>Account Summary</h2>
-        <p>Total Income: <b>{{total_income}}</b></p>
-        <p>Total Expenses: <b>{{total_expenses}}</b></p>
-        <p>Remaining Balance: <b>{{net_balance}}</b></p>
+<!-- Sidebar Navigation -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h1>Expense Tracker</h1>
+        <p>Financial Management</p>
     </div>
-
-    <div class="card">
-        <h2>Recent Transactions</h2>
-        <ul>
-            {% for transaction in recent_transactions %}
-                <li>{{ transaction.date }} - {{ transaction.description }}: {{ transaction.amount }}</li>
-            {% endfor %}
-        </ul>
-        <a href="{% url 'transactions:view_transactions' %}" class="button">View All Transactions</a>
-    </div>
-
-    <!-- Quick Actions Section -->
-    <div class="card">
-        <h2>Quick Actions</h2>
-        <a href="{% url 'transactions:add_income' %}" class="button">Add Income</a>
-        <a href="{% url 'transactions:add_expense' %}" class="button">Add Expense</a>
-        <a href="{% url 'reports:analytics' %}" class="button">View Analytics</a>
-        <a href="{% url 'transactions:upload_pdf' %}" class="button">Upload PDF</a>
-    </div>
-</div>
-
-<div class="card">
-    <h2>Expenditure by Category</h2>
-    <ul>
-        {% for expense in expenditure_by_category %}
-            <li>{{ expense.category }}: {{ expense.total_amount }}</li>
-        {% endfor %}
+    
+    <ul class="nav-menu">
+        <li class="nav-item">
+            <a href="{% url 'core:dashboard' %}" class="nav-link active">
+                <span class="nav-icon">📊</span>
+                Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:view_transactions' %}" class="nav-link">
+                <span class="nav-icon">💳</span>
+                Transactions
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:add_income' %}" class="nav-link">
+                <span class="nav-icon">💰</span>
+                Add Income
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:add_expense' %}" class="nav-link">
+                <span class="nav-icon">💸</span>
+                Add Expense
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'reports:analytics' %}" class="nav-link">
+                <span class="nav-icon">📈</span>
+                Analytics
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:upload_pdf' %}" class="nav-link">
+                <span class="nav-icon">📄</span>
+                Upload PDF
+            </a>
+        </li>
     </ul>
+    
+    <div class="logout-section">
+        <a href="{% url 'core:logout' %}" class="logout-button">
+            <span class="nav-icon">🚪</span>
+            Logout
+        </a>
+    </div>
 </div>
+
+<!-- Main Content Area -->
+<div class="main-content">
+    <!-- Header Section -->
+    <div class="header">
+        <h1>Welcome Back!</h1>
+        <p>Hello, <b>{{ username }}</b>! Here's an overview of your finances.</p>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-container">
+        <!-- Account Summary Section -->
+        <div class="card account-summary">
+            <h2>Account Summary</h2>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="summary-label">Total Income</div>
+                    <div class="summary-value positive">{{total_income}}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Total Expenses</div>
+                    <div class="summary-value negative">{{total_expenses}}</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">Net Balance</div>
+                    <div class="summary-value">{{net_balance}}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="card">
+            <h2>Recent Transactions</h2>
+            <ul class="transaction-list">
+                {% for transaction in recent_transactions %}
+                    <li class="transaction-item">
+                        <span class="transaction-date">{{ transaction.date }}</span>
+                        <span class="transaction-description">{{ transaction.description }}</span>
+                        <span class="transaction-amount">{{ transaction.amount }}</span>
+                    </li>
+                {% empty %}
+                    <div class="empty-state">No recent transactions found</div>
+                {% endfor %}
+            </ul>
+            <a href="{% url 'transactions:view_transactions' %}" class="button">View All Transactions</a>
+        </div>
+
+        <!-- Expenditure by Category -->
+        <div class="card">
+            <h2>Expenditure by Category</h2>
+            <ul class="category-list">
+                {% for expense in expenditure_by_category %}
+                    <li class="category-item">
+                        <span class="category-name">{{ expense.category }}</span>
+                        <span class="category-amount">{{ expense.total_amount }}</span>
+                    </li>
+                {% empty %}
+                    <div class="empty-state">No expenses found</div>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Quick Actions Section -->
+        <div class="card">
+            <h2>Quick Actions</h2>
+            <div class="quick-actions">
+                <a href="{% url 'transactions:add_income' %}" class="button success">Add Income</a>
+                <a href="{% url 'transactions:add_expense' %}" class="button warning">Add Expense</a>
+                <a href="{% url 'reports:analytics' %}" class="button secondary">View Analytics</a>
+                <a href="{% url 'transactions:upload_pdf' %}" class="button">Upload PDF</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme Toggle Functionality
+function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.getElementById('theme-icon');
+    const currentTheme = body.getAttribute('data-theme');
+    
+    if (currentTheme === 'dark') {
+        body.removeAttribute('data-theme');
+        themeIcon.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+    } else {
+        body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Load saved theme on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme');
+    const themeIcon = document.getElementById('theme-icon');
+    
+    if (savedTheme === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+    } else {
+        themeIcon.textContent = '🌙';
+    }
+});
+
+// Sidebar Toggle
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('open');
+}
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(event) {
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.querySelector('.mobile-menu-toggle');
+    
+    if (window.innerWidth <= 1024 && 
+        !sidebar.contains(event.target) && 
+        !toggle.contains(event.target)) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
 {% endblock %}

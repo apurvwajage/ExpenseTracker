@@ -40,7 +40,6 @@ class transaction(models.Model):
         ('Income', 'Income'),
         ('Expense', 'Expense'),
     ])
-    fileName = models.CharField(max_length=100, default="")
 
     def __str__(self):
         return f"{self.user.username} - {self.amount} - {self.description}"

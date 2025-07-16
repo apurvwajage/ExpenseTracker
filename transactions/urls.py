@@ -11,5 +11,5 @@ urlpatterns = [
     path('delete/<int:transaction_id>/', views.delete, name='delete'),
     path('update/<int:transaction_id>/', views.update, name='update'),
     path('upload_pdf/', views.upload_pdf, name='upload_pdf'),
-    path('save_pdf_transactions', views.save_pdf_transactions, name ='save_pdf_transactions'),
+    path('save_pdf_transactions/', views.save_pdf_transactions, name ='save_pdf_transactions'),
 ]

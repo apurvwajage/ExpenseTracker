@@ -47,6 +47,7 @@
                     <th>Category</th>
                 </tr>
             </thead>
+            <tbody>
             {% for match in matches_list %}
             <tr class="transaction-row" data-date="{{match.formatted_date}}" data-type="{{match.type}}">
                 <td><input type="checkbox" name="selectedTransactions" value="{{match.transaction_id}}"></td>
@@ -64,7 +65,7 @@
                 </td>
                 <td>
                     {{match.amount}}
-                    <input type="hidden" name='amount_{{match.transaction_id}}'' value="{{match.amount}}"> <!-- Hidden input for amount -->
+                    <input type="hidden" name="amount_{{match.transaction_id}}" value="{{match.amount}}"> <!-- Hidden input for amount -->
                 </td>
                 <td>
                     <input type="text" name="details_{{match.transaction_id}}" value="{{match.details}}" required>
@@ -89,9 +90,7 @@
                         <option value="Passive Income">Passive Income</option>
                         <option value="Other Income">Other Income</option>
                         <option value="Other">Other</option>
-                </td>
-                <td>
-                    <input type="hidden" name='fileName_{{match.transaction_id}}'' value="{{file_name}}"> <!-- Hidden input for amount -->
+                    </select>
                 </td>
             </tr>
             
@@ -134,5 +133,23 @@
             }
         });
     }
+
+    document.querySelector('form').addEventListener('submit', function (e) {
+    const rows = document.querySelectorAll('.transaction-row');
+    let anyChecked = false;
+    rows.forEach(row => {
+        const checkbox = row.querySelector('input[type="checkbox"]');
+        if (!checkbox.checked) {
+            row.remove();
+        } else {
+            anyChecked = true;
+        }
+    });
+
+    if (!anyChecked) {
+        e.preventDefault();
+        alert("Please select at least one transaction before uploading.");
+    }
+});
     </script>
 {% endblock %}

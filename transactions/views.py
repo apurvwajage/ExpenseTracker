@@ -2,122 +2,18 @@ import io
 from django.shortcuts import render,redirect
 from datetime import datetime
 from core.models import users,transaction
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from .forms import ExpenseForm, IncomeForm, PDFform
 from django.utils.text import slugify
 from core.forms import TransactionForm
 from django.conf import settings
 import fitz
 import re
-import dropbox
-import dropbox.exceptions
 import uuid
 import os
 
 
-# Create your views here.
-
-#------------------------------------------------------- Dropbox connection and Uploading and Retrieving Files-----------------------------------------------
-def connect_dropbox():
-    try:
-        TOKEN = settings.DROPBOX_TOKEN
-        dbx = dropbox.Dropbox(TOKEN)
-        return {"dbx":dbx, "connected": True}
-
-    except dropbox.exceptions.AuthError as e:
-        print("❌ Dropbox Auth Error:", e)
-        return {
-            'connected': False,
-            'error': "Authentication failed. Check your token or scopes."
-        }
-
-    except dropbox.exceptions.ApiError as e:
-        print("❌ Dropbox API Error:", e)
-        return {
-            'connected': False,
-            'error': "API error occurred. Possibly missing required permission (scope)."
-        }
-
-    except Exception as e:
-        print("❌ General Error:", e)
-        return {
-            'connected': False,
-            'error': str(e)
-        }
-    
-def upload_file_to_dropbox(file, user):
-    try:
-        connect = connect_dropbox()
-        if connect["connected"] == False:
-            return HttpResponse("<h1>Dropbox Connection Failed</h1>" + connect["error"])
-        else:
-            dbx = connect["dbx"]
-        # Get original filename and extension
-        original_filename = file.name
-        print(original_filename)
-        ext = os.path.splitext(original_filename)[1]
-
-        # Sanitize and build a more unique filename
-        username_slug = slugify(user.username)
-        user_id = user.id
-        unique_id = uuid.uuid4().hex
-        unique_filename = f"{username_slug}_{user_id}_{unique_id}{ext}"
-
-        # Read file content
-        file_data = file.read()
-        print("File data read successfully")
-        print(file_data)
-
-        # NEW ✅
-        dropbox_path = f"/uploaded_pdfs/{unique_filename}"
-        dbx.files_upload(file_data, dropbox_path, mode=dropbox.files.WriteMode("overwrite"))
-
-        print(f"✅ Uploaded {original_filename} as {unique_filename}")
-
-        return unique_filename
-
-    except Exception as e:
-        print("❌ Error during Dropbox upload:", e)
-        return None, None
-    
-
-def get_selected_file_links(filenames):
-    try:
-        connect = connect_dropbox()
-        if connect["connected"] == False:
-            return HttpResponse("<h1>Dropbox Connection Failed</h1>" + connect["error"])
-        else:
-            dbx = connect["dbx"]
-        print(filenames)
-        # Clean filenames: convert to list, remove empty strings and strip spaces
-        filenames = [f.strip() for f in filenames if f and f.strip() != ""]
-        print(filenames)
-        file_links = {}
-        for name in filenames:
-            dropbox_path = f"/{name}"  # Adjust path if you're using folders
-            try:
-                link_metadata = dbx.files_get_temporary_link(dropbox_path)
-                file_links[name] = link_metadata.link
-                print(f"✔️ Link created for: {name}")
-            except dropbox.exceptions.ApiError as e:
-                print(f"❌ Could not generate link for {name}: {e}")
-                continue
-            except Exception as e:
-                print(f"⚠️ Unexpected error for {name}: {e}")
-                continue
-        return {"file_links":file_links, "success":True}
-    
-    except Exception as e:
-        print("❌ Error:", e)
-        return {
-            'file_links': [],
-            "success": False,
-            'error': str(e)
-        }
-
-
-
-#------------------------------------------------------- Function to add Income----------------------------------------------------------------------
+#-------------------------------------------- Function to add Income---------------------------------------------
 def add_income(request):
     user_id = request.session.get('user_id')  # Retrieve user ID from session
     if not user_id:
@@ -150,7 +46,7 @@ def add_income(request):
         context = {'form': form}
         return render(request, 'add_income.html', context)
     
-#------------------------------------------------------- Function to add Expense----------------------------------------------------------------------
+#------------------------------------------------------- Function to add Expense--------------------------------------------------
 def add_expense(request):
     user_id = request.session.get('user_id')  # Retrieve user ID from session
     if not user_id:
@@ -189,20 +85,6 @@ def view_transactions(request):
     if not user_id:
         return redirect('login')  # Redirect to login if user ID is not found
     transactions = transaction.objects.filter(user=users.objects.get(pk=user_id)).order_by('-date')  # Fetch transactions for the logged-in user
-    distinct_filenames = transaction.objects.filter(user=users.objects.get(pk=user_id)).values_list('fileName', flat=True).distinct()
-    links = get_selected_file_links(distinct_filenames)  # Get links for the distinct filenames
-    # Add `pdf_link` attribute to each transaction object if a link exists
-    if links["success"]:
-        file_links = links["file_links"]
-        for txn in transactions:
-            if txn.fileName and txn.fileName in file_links:
-                txn.fileName = file_links[txn.fileName]
-                print(f"✔️ Link for {txn.fileName} added to transaction")
-            else:
-                txn.fileName = None
-    else:
-        for txn in transactions:
-            txn.fileName = None
     context = {
         'transactions': transactions,  # Pass transactions to the template
     }
@@ -323,43 +205,9 @@ def upload_pdf(request):
     if request.method == 'POST':
         form = PDFform(request.POST, request.FILES)
         if form.is_valid():
-            
-            try:
-                TOKEN = settings.DROPBOX_TOKEN
-
-                dbx = dropbox.Dropbox(TOKEN)
-
-                uploaded_file = request.FILES["pdf"]
-                original_filename = uploaded_file.name
-                ext = os.path.splitext(original_filename)[1]
-                user = users.objects.get(pk=user_id)  # Fetch user from custom table
-                username_slug = slugify(user.username)
-                user_id = user.id
-                unique_id = uuid.uuid4().hex
-                unique_name = f"{username_slug}_{user_id}_{unique_id}{ext}"
-
-                # Read file content
-                file_data = uploaded_file.read()
-
-                # ✅ Reset the pointer before passing to data_extraction
-                uploaded_file.seek(0)
-
-                # Upload to Dropbox
-                dbx.files_upload(file_data, f"/{unique_name}", mode=dropbox.files.WriteMode("overwrite"))
-
-                print(f"✅ Uploaded '{original_filename}' as '{unique_name}' to Dropbox")
-
-            except Exception as e:
-                print("❌ Upload Error:", e)
-                return render(request, 'index.html', {
-                    'connected': False,
-                    'error': str(e)
-                })
             pdf_file = form.cleaned_data['pdf']  # Get the uploaded PDF file
-            print("Reached outside try")
             matches_list = data_extraction(pdf_file)
-            print("Reached outside try second")
-            return render(request, 'pdf_result.html', {'matches_list': matches_list, 'file_name':unique_name})
+            return render(request, 'pdf_result.html', {'matches_list': matches_list})
     return render(request, 'upload_pdf.html', context)
 
 def save_pdf_transactions(request):
@@ -368,7 +216,6 @@ def save_pdf_transactions(request):
         return redirect('login')  # Redirect to login if user ID is not found
     if request.method == "POST":
         selected_transactions = request.POST.getlist('selectedTransactions')  # Get the list of selected transaction IDs
-        transactions_to_save = []
         
         for transaction_id in selected_transactions:
             description  = request.POST.get(f'details_{transaction_id}') +" " +transaction_id
@@ -387,8 +234,7 @@ def save_pdf_transactions(request):
                 description=description,
                 category=request.POST.get(f'category_{transaction_id}'),
                 transaction_type=type,
-                date= request.POST.get(f'date_{transaction_id}'),
-                fileName = request.POST.get(f'fileName_{transaction_id}'),
+                date= request.POST.get(f'date_{transaction_id}')
             )
             new_transaction.save()
 

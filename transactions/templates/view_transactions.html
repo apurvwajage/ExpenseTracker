@@ -31,7 +31,7 @@
                 <th>Amount</th>
                 <th>Date</th>
                 <th>Actions</th>
-                <th>File</th>
+                <!-- <th>File</th> -->
             </tr>
         </thead>
         <tbody>
@@ -45,13 +45,13 @@
                         <a href="{% url 'transactions:update' transaction.pk %}" class="button update">Edit</a>
                         <a href="{% url 'transactions:delete' transaction.pk %}" class="button delete">Delete</a>
                     </td>
-                    <td>
+                    <!-- <td>
                         {% if transaction.fileName %}
                                     <a href="{{ transaction.fileName }}" target="_blank" onclick="event.stopPropagation();">
                                         <ion-icon name="document"></ion-icon>
                                     </a>
                         {% endif %}
-                    </td>
+                    </td> -->
                 </tr>
             {% endfor %}
         </tbody>

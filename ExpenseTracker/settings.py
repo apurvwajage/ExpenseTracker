@@ -25,8 +25,6 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
 
-DROPBOX_TOKEN = config('DROPBOX_TOKEN')
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
@@ -137,3 +135,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# DATA_UPLOAD_MAX_NUMBER_FIELDS = 5000

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-
 {% load static %}
+
 {% block title %}View Transaction - Expense Tracker{% endblock %}
 
 {% block css %}
@@ -8,43 +8,163 @@
 {% endblock %}
 
 {% block content %}
-<!-- Transaction Details Section -->
-<div class="transaction-details">
-    <h2>Transaction Details</h2>
+<!-- Theme Toggle Button -->
+<button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+    <span id="theme-icon">🌙</span>
+</button>
 
-	<!-- Category -->
-    <div class="detail">
-        <label>Category:</label>
-        <span class="value">{{transaction.category}}</span>
+<!-- Mobile Menu Toggle -->
+<button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+
+<!-- Sidebar Navigation -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h1>Expense Tracker</h1>
+        <p>Financial Management</p>
     </div>
     
-    <!-- Type -->
-    <div class="detail">
-        <label>Transaction Type:</label>
-        <span class="value">{{transaction.transaction_type}}</span>
-    </div>
-
-    <!-- Amount -->
-    <div class="detail">
-        <label>Amount:</label>
-        <span class="<%= amountClass %>">{{transaction.amount}}</span>
-    </div>
-
-    <!-- Description -->
-    <div class="detail">
-        <label>Description:</label>
-        <span class="value">{{transaction.description}}</span>
-    </div>
-
-    <!-- Date -->
-    <div class="detail">
-        <label>Date:</label>
-        <span class="value">{{transaction.date}}</span>
+    <ul class="nav-menu">
+        <li class="nav-item">
+            <a href="{% url 'core:dashboard' %}" class="nav-link">
+                <span class="nav-icon">📊</span>
+                Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:view_transactions' %}" class="nav-link">
+                <span class="nav-icon">💳</span>
+                Transactions
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:add_income' %}" class="nav-link">
+                <span class="nav-icon">💰</span>
+                Add Income
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:add_expense' %}" class="nav-link">
+                <span class="nav-icon">💸</span>
+                Add Expense
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'reports:analytics' %}" class="nav-link">
+                <span class="nav-icon">📈</span>
+                Analytics
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:upload_pdf' %}" class="nav-link">
+                <span class="nav-icon">📄</span>
+                Upload PDF
+            </a>
+        </li>
+    </ul>
+    
+    <div class="logout-section">
+        <a href="{% url 'core:logout' %}" class="logout-button">
+            <span class="nav-icon">🚪</span>
+            Logout
+        </a>
     </div>
 </div>
 
-<!-- Back Button -->
-<div style="text-align: center; margin-top: 20px;">
-    <a href="{% url 'transactions:view_transactions'%}" class="button">Back to Transactions</a>
+<!-- Main Content Area -->
+<div class="main-content">
+    <!-- Transaction Details Section -->
+    <div class="transaction-details">
+        <h2>Transaction Details</h2>
+        
+        <!-- Category -->
+        <div class="detail">
+            <label>Category:</label>
+            <span class="value">{{transaction.category}}</span>
+        </div>
+            
+        <!-- Type -->
+        <div class="detail">
+            <label>Transaction Type:</label>
+            <span class="value {% if transaction.transaction_type == 'Income' %}income{% else %}expense{% endif %}">
+                {{transaction.transaction_type}}
+            </span>
+        </div>
+        
+        <!-- Amount -->
+        <div class="detail">
+            <label>Amount:</label>
+            <span class="value {% if transaction.transaction_type == 'Income' %}income{% else %}expense{% endif %}">
+                {{transaction.amount}}
+            </span>
+        </div>
+        
+        <!-- Description -->
+        <div class="detail">
+            <label>Description:</label>
+            <span class="value">{{transaction.description}}</span>
+        </div>
+        
+        <!-- Date -->
+        <div class="detail">
+            <label>Date:</label>
+            <span class="value">{{transaction.date}}</span>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <a href="{% url 'transactions:update' transaction.pk %}" class="button edit">Edit Transaction</a>
+        <a href="{% url 'transactions:view_transactions'%}" class="button">Back to Transactions</a>
+    </div>
 </div>
+
+<script>
+// Theme Toggle Functionality
+function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.getElementById('theme-icon');
+    const currentTheme = body.getAttribute('data-theme');
+    
+    if (currentTheme === 'dark') {
+        body.removeAttribute('data-theme');
+        themeIcon.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+    } else {
+        body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Load saved theme on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme');
+    const themeIcon = document.getElementById('theme-icon');
+    
+    if (savedTheme === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+    } else {
+        themeIcon.textContent = '🌙';
+    }
+});
+
+// Sidebar Toggle
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('open');
+}
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(event) {
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.querySelector('.mobile-menu-toggle');
+    
+    if (window.innerWidth <= 1024 && 
+        !sidebar.contains(event.target) && 
+        !toggle.contains(event.target)) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
 {% endblock %}

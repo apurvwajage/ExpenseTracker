@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block title %}
     Expense Tracker - Register
 {% endblock %}
@@ -9,23 +10,27 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<!-- Theme Toggle Button -->
+<button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+    <span id="theme-icon">🌙</span>
+</button>
 
+<div class="container">
     {% if success %}
-        <div id="success-message" style="color: green;">
+        <div id="success-message">
             Registration successful! Redirecting to login page...
         </div>
         <script>
             setTimeout(function() {
-                window.location.href = "{% url 'core:login' %}"; // Change 'login' to your actual login URL name
+                window.location.href = "{% url 'core:login' %}";
             }, 2000);
         </script>
-    {%else%}
+    {% else %}
     <div class="header">
         <h1>Expense Tracker</h1>
         <p>Create your account to start managing your expenses.</p>
     </div>
-
+    
     <!-- Registration Form -->
     <div class="form-container">
         <form action="/register/" method="POST" class="form">
@@ -35,27 +40,61 @@
                 <label for="username">{{ form.username.label}}</label>
                 {{ form.username }}
             </div>
-
             <!-- Email Field -->
             <div class="form-group">
                 <label for="email">{{ form.email.label }}</label>
                 {{ form.email }}
             </div>
-
             <!-- Password Field -->
             <div class="form-group">
                 <label for="password">{{form.password.label}}</label>
                 {{form.password}}
             </div>
-            
+                        
             <!-- Submit Button -->
             <div class="form-group">
                 <button type="submit" class="button">Register</button>
             </div>
-
-            <p>Already have an account? <a href="/login/" style="color: #00bcd4;">Login here</a></p>
+            <p>Already have an account? <a href="/login/">Login here</a></p>
         </form>
     </div>
     {% endif %}
 </div>
+
+<script>
+// Theme Toggle Functionality
+function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.getElementById('theme-icon');
+    const currentTheme = body.getAttribute('data-theme');
+    
+    if (currentTheme === 'dark') {
+        body.removeAttribute('data-theme');
+        themeIcon.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+    } else {
+        body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Load saved theme on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme');
+    const themeIcon = document.getElementById('theme-icon');
+    
+    if (savedTheme === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+    } else {
+        themeIcon.textContent = '🌙';
+    }
+});
+
+// Add loading state to button
+document.querySelector('.button').addEventListener('click', function(e) {
+    this.classList.add('loading');
+});
+</script>
 {% endblock %}

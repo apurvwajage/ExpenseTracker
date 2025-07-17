@@ -141,12 +141,10 @@ def delete(request,transaction_id):
 def data_extraction(pdf_file):
     try:
         # Open the PDF file
-        print("Inside data extraction method")
         # Use BytesIO to ensure fitz.open gets a proper stream
         file_stream = io.BytesIO(pdf_file.read())
 
         doc = fitz.open(stream=file_stream, filetype="pdf")
-        print("2")
 
         # Extract text from all pages
         text = ''
@@ -158,8 +156,6 @@ def data_extraction(pdf_file):
         single_line_text = single_line_text.replace("\x01", "")  # Remove unwanted characters
         single_line_text = re.sub(r'(\d{1,2})f(\d{1,2}\s*[APMapm]{2})', r'\1:\2', single_line_text)
         
-
-        print(single_line_text)
 
         # Define the regex pattern
         pattern = r"(\w{3}\d{2},\d{4})(\d{1,2}:\d{2}[APMapm]{2})(DEBIT|CREDIT)₹(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)(\w+(?:\s+\w+)*)(TransactionID[A-Z0-9]+\d{1})"

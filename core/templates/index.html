@@ -9,36 +9,85 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
 {% endblock %}
 
-
 {% block content %}
+<!-- Theme Toggle Button -->
+<button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+    <span id="theme-icon">🌙</span>
+</button>
+
 <div class="container">
     <div class="header">
         <h1>Welcome to Expense Tracker</h1>
-        <p>Track your expenses and manage your finances effortlessly.</p>
+        <p>Track your expenses and manage your finances effortlessly with our modern, intuitive platform.</p>
     </div>
-
+    
     <!-- Options: Register or Login -->
     <div class="options">
         <div class="option">
             <h2>New User?</h2>
-            <p>Create a new account to start tracking your expenses.</p>
-            <a href="/register/"  class="button">Register</a>
+            <p>Create a new account to start tracking your expenses and take control of your financial future.</p>
+            <a href="/register/" class="button">Register</a>
         </div>
         <div class="option">
             <h2>Existing User?</h2>
-            <p>Already have an account? Log in to manage your expenses.</p>
+            <p>Already have an account? Log in to access your dashboard and manage your expenses.</p>
             <a href="/login/" class="button">Login</a>
         </div>
     </div>
-
+    
     <!-- Additional Info or Features -->
     <div class="info">
         <h3>Features</h3>
         <ul>
-            <li>Track your expenses by category</li>
-            <li>View detailed reports and analytics</li>
-            <li>Set budgets and see spending trends</li>
+            <li>Track your expenses by category with detailed insights</li>
+            <li>View comprehensive reports and analytics</li>
+            <li>Set budgets and monitor spending trends</li>
+            <li>Upload receipts and manage transactions</li>
+            <li>Export data and generate financial reports</li>
         </ul>
     </div>
 </div>
+
+<script>
+// Theme Toggle Functionality
+function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.getElementById('theme-icon');
+    const currentTheme = body.getAttribute('data-theme');
+    
+    if (currentTheme === 'dark') {
+        body.removeAttribute('data-theme');
+        themeIcon.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+    } else {
+        body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Load saved theme on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme');
+    const themeIcon = document.getElementById('theme-icon');
+    
+    if (savedTheme === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+    } else {
+        themeIcon.textContent = '🌙';
+    }
+});
+
+// Add loading state to buttons
+document.querySelectorAll('.button').forEach(button => {
+    button.addEventListener('click', function(e) {
+        this.classList.add('loading');
+        // Remove loading class after a short delay (for demo purposes)
+        setTimeout(() => {
+            this.classList.remove('loading');
+        }, 2000);
+    });
+});
+</script>
 {% endblock %}

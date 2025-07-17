@@ -1,4 +1,4 @@
-/* Modern Update Transaction Page Styles - Dark Theme with Sidebar */
+/* Modern Add Expense Page Styles - Dark Theme with Sidebar */
 
 * {
     margin: 0;
@@ -15,16 +15,13 @@
     --text-secondary: #64748b;
     --text-muted: #94a3b8;
     --border-color: #e2e8f0;
-    --accent-primary: #059669;
-    --accent-secondary: #10b981;
-    --accent-gradient: linear-gradient(135deg, #059669, #10b981);
-    --income-color: #10b981;
-    --expense-color: #ef4444;
+    --accent-primary: #dc2626;
+    --accent-secondary: #ef4444;
+    --accent-gradient: linear-gradient(135deg, #dc2626, #ef4444);
     --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
     --card-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     --success-color: #10b981;
     --error-color: #ef4444;
-    --warning-color: #f59e0b;
 }
 
 [data-theme="dark"] {
@@ -36,16 +33,13 @@
     --text-secondary: #cbd5e1;
     --text-muted: #94a3b8;
     --border-color: #475569;
-    --accent-primary: #059669;
-    --accent-secondary: #10b981;
-    --accent-gradient: linear-gradient(135deg, #059669, #10b981);
-    --income-color: #10b981;
-    --expense-color: #ef4444;
+    --accent-primary: #dc2626;
+    --accent-secondary: #ef4444;
+    --accent-gradient: linear-gradient(135deg, #dc2626, #ef4444);
     --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
     --card-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
     --success-color: #10b981;
     --error-color: #f87171;
-    --warning-color: #fbbf24;
 }
 
 body {
@@ -179,27 +173,21 @@ body {
     background-color: var(--bg-primary);
     padding: 2rem 3rem;
     transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
 }
 
-/* Container */
-.container {
+/* Page Header */
+.page-header {
     background: var(--bg-secondary);
+    padding: 2rem 3rem;
     border-radius: 16px;
-    padding: 3rem;
-    width: 100%;
-    max-width: 600px;
+    margin-bottom: 2rem;
     box-shadow: var(--card-shadow);
     border: 1px solid var(--border-color);
     position: relative;
     overflow: hidden;
-    transition: all 0.3s ease;
 }
 
-.container::before {
+.page-header::before {
     content: '';
     position: absolute;
     top: 0;
@@ -209,7 +197,55 @@ body {
     background: var(--accent-gradient);
 }
 
-.container h1 {
+.page-header h1 {
+    color: var(--text-primary);
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.page-header h1::before {
+    content: '💸';
+    font-size: 1.5rem;
+}
+
+.page-header p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+/* Form Container */
+.form-container {
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    padding: 3rem;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border-color);
+    max-width: 600px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.form-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--accent-gradient);
+}
+
+.form-container:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--card-shadow-hover);
+}
+
+.form-container h2 {
     color: var(--text-primary);
     font-size: 1.75rem;
     font-weight: 600;
@@ -221,8 +257,8 @@ body {
     gap: 0.5rem;
 }
 
-.container h1::before {
-    content: '✏️';
+.form-container h2::before {
+    content: '💳';
     font-size: 1.5rem;
 }
 
@@ -239,7 +275,7 @@ form {
     gap: 0.5rem;
 }
 
-.form-group label {
+label {
     color: var(--text-primary);
     font-weight: 600;
     font-size: 0.95rem;
@@ -249,25 +285,19 @@ form {
     gap: 0.5rem;
 }
 
-/* Add icons to labels */
-label[for*="transactionType"]::before,
-label[for*="transaction_type"]::before {
-    content: '🔄';
+/* Add expense-specific icons to labels */
+label[for*="amount"]::before {
+    content: '💰';
     font-size: 1rem;
 }
 
 label[for*="category"]::before {
-    content: '📂';
+    content: '🏷️';
     font-size: 1rem;
 }
 
 label[for*="description"]::before {
-    content: '📝';
-    font-size: 1rem;
-}
-
-label[for*="amount"]::before {
-    content: '💰';
+    content: '📋';
     font-size: 1rem;
 }
 
@@ -290,7 +320,7 @@ input, select, textarea {
 input:focus, select:focus, textarea:focus {
     outline: none;
     border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
     transform: translateY(-2px);
     background: var(--bg-secondary);
 }
@@ -310,42 +340,132 @@ select {
 
 /* Button Styles */
 .button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.75rem 1.5rem;
     background: var(--accent-gradient);
     color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: 500;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
     border: none;
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
     cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+    margin-top: 1rem;
+}
+
+.button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.button:hover::before {
+    left: 100%;
 }
 
 .button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(5, 150, 105, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(220, 38, 38, 0.4);
 }
 
-.button.cancel {
-    background: linear-gradient(135deg, #64748b, #475569);
-    margin-left: 1rem;
+.button:active {
+    transform: translateY(-1px);
 }
 
-.button.cancel:hover {
-    box-shadow: 0 10px 20px rgba(100, 116, 139, 0.3);
+/* Success/Error Messages */
+.success-message {
+    background: var(--success-color);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    animation: slideIn 0.5s ease-out;
 }
 
-/* Button Container */
-.form-group:last-child {
+.error-message {
+    background: var(--error-color);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loading Animation for Button */
+.button.loading {
+    position: relative;
+    color: transparent;
+}
+
+.button.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Expense-specific styling */
+.expense-warning {
+    background: rgba(220, 38, 38, 0.1);
+    border: 1px solid rgba(220, 38, 38, 0.2);
+    color: var(--accent-primary);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 1rem;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.expense-warning::before {
+    content: '⚠️';
+    font-size: 1rem;
+}
+
+/* Amount input specific styling for expenses */
+input[type="number"] {
+    position: relative;
+}
+
+input[type="number"]:focus {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
 }
 
 /* Responsive Design */
@@ -364,8 +484,12 @@ select {
         padding: 1.5rem;
     }
     
-    .container {
+    .form-container {
         padding: 2rem;
+    }
+    
+    .page-header {
+        padding: 1.5rem;
     }
     
     .theme-toggle {
@@ -382,11 +506,19 @@ select {
         padding: 1rem;
     }
     
-    .container {
+    .form-container {
         padding: 1.5rem;
     }
     
-    .container h1 {
+    .page-header {
+        padding: 1rem;
+    }
+    
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .form-container h2 {
         font-size: 1.5rem;
     }
     
@@ -395,17 +527,9 @@ select {
         font-size: 0.95rem;
     }
     
-    .form-group:last-child {
-        flex-direction: column;
-    }
-    
     .button {
-        width: 100%;
-    }
-    
-    .button.cancel {
-        margin-left: 0;
-        margin-top: 0.5rem;
+        padding: 14px 24px;
+        font-size: 1rem;
     }
 }
 
@@ -451,27 +575,12 @@ textarea:focus-visible {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-/* Loading Animation */
-.button.loading {
-    position: relative;
-    color: transparent;
-}
-
-.button.loading::after {
-    content: '';
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    top: 50%;
-    left: 50%;
-    margin-left: -10px;
-    margin-top: -10px;
-    border: 2px solid #ffffff;
-    border-radius: 50%;
-    border-top-color: transparent;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
+/* Category-specific styling */
+.category-food::before { content: '🍽️'; }
+.category-transport::before { content: '🚗'; }
+.category-entertainment::before { content: '🎬'; }
+.category-shopping::before { content: '🛍️'; }
+.category-bills::before { content: '📄'; }
+.category-healthcare::before { content: '🏥'; }
+.category-education::before { content: '📚'; }
+.category-other::before { content: '📦'; }

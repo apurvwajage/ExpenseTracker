@@ -1,15 +1,77 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}
-    Expense Tracker
-{% endblock %}
+{% block title %}PDF Transactions - Expense Tracker{% endblock %}
 
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/pdf_result.css' %}">
 {% endblock %}
 
 {% block content %}
+<!-- Theme Toggle Button -->
+<button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+    <span id="theme-icon">🌙</span>
+</button>
+
+<!-- Mobile Menu Toggle -->
+<button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+
+<!-- Sidebar Navigation -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h1>Expense Tracker</h1>
+        <p>Financial Management</p>
+    </div>
+    
+    <ul class="nav-menu">
+        <li class="nav-item">
+            <a href="{% url 'core:dashboard' %}" class="nav-link">
+                <span class="nav-icon">📊</span>
+                Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:view_transactions' %}" class="nav-link">
+                <span class="nav-icon">💳</span>
+                Transactions
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:add_income' %}" class="nav-link">
+                <span class="nav-icon">💰</span>
+                Add Income
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:add_expense' %}" class="nav-link">
+                <span class="nav-icon">💸</span>
+                Add Expense
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'reports:analytics' %}" class="nav-link">
+                <span class="nav-icon">📈</span>
+                Analytics
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:upload_pdf' %}" class="nav-link active">
+                <span class="nav-icon">📄</span>
+                Upload PDF
+            </a>
+        </li>
+    </ul>
+    
+    <div class="logout-section">
+        <a href="{% url 'core:logout' %}" class="logout-button">
+            <span class="nav-icon">🚪</span>
+            Logout
+        </a>
+    </div>
+</div>
+
+<!-- Main Content Area -->
+<div class="main-content">
     <!-- Filter Section -->
     <div class="filter-container">
         <div>
@@ -28,13 +90,13 @@
             <button type="button" onclick="filterTransactions()">Filter</button>
         </div>
     </div>
-
-    <form action="{% url 'transactions:save_pdf_transactions' %}" method="post"> <!-- Form to submit selected transactions -->
+    
+    <form action="{% url 'transactions:save_pdf_transactions' %}" method="post">
         {% csrf_token %}
         <div style="text-align: center; margin-top: 20px;">
-            <button type="submit" class="add-button">Upload Selected Transactions</button> <!-- Button to submit the form -->
+            <button type="submit" class="add-button">Upload Selected Transactions</button>
         </div>
-        <table border="1" id="transactionsTable">
+        <table id="transactionsTable">
             <thead>
                 <tr>
                     <th>Select</th>
@@ -48,108 +110,169 @@
                 </tr>
             </thead>
             <tbody>
-            {% for match in matches_list %}
-            <tr class="transaction-row" data-date="{{match.formatted_date}}" data-type="{{match.type}}">
-                <td><input type="checkbox" name="selectedTransactions" value="{{match.transaction_id}}"></td>
-                <td>
-                    {{match.date}}
-                    <input type="hidden" name="date_{{match.transaction_id}}" value="{{match.formatted_date}}">
-                </td>
-                <td>
-                    {{match.time}}
-                    <input type="hidden" name="time_{{match.transaction_id}}" value="{{match.time}}">
-                </td>
-                <td>
-                    {{match.type}}
-                    <input type="hidden" name="type_{{match.transaction_id}}" value="{{match.type}}">
-                </td>
-                <td>
-                    {{match.amount}}
-                    <input type="hidden" name="amount_{{match.transaction_id}}" value="{{match.amount}}"> <!-- Hidden input for amount -->
-                </td>
-                <td>
-                    <input type="text" name="details_{{match.transaction_id}}" value="{{match.details}}" required>
-                </td>
-                <td>{{match.transaction_id}}</td>
-                <td>
-                    <select name="category_{{match.transaction_id}}" id="details_{{match.transaction_id}}">
-                        <option value="" disabled selected>Select a category</option>
-                        <option value="Rent">Rent</option>
-                        <option value="Groceries">Groceries</option>
-                        <option value="Insurance">Insurance</option>
-                        <option value="Healthcare"> Healthcare</option>
-                        <option value="Food">Food</option>
-                        <option value="Transport">Transport</option>
-                        <option value="Entertainment">Entertainment</option>
-                        <option value="Utilities">Utilities</option>
-                        <option value="Shopping">Shopping</option>
-                        <option value="Financial">Financial</option>
-                        <option value="Household">Household</option>
-                        <option value="Miscellaneous">Miscellaneous</option>
-                        <option value="Primary Income">Primary Income</option>
-                        <option value="Passive Income">Passive Income</option>
-                        <option value="Other Income">Other Income</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </td>
-            </tr>
-            
-        {% endfor %}
-    </tbody>
-</table>
-<div style="text-align: center; margin-top: 20px;">
-    <button type="submit" class="add-button">Upload Selected Transactions</button> <!-- Button to submit the form -->
+                {% for match in matches_list %}
+                <tr class="transaction-row" data-date="{{match.formatted_date}}" data-type="{{match.type}}">
+                    <td data-label="Select"><input type="checkbox" name="selectedTransactions" value="{{match.transaction_id}}"></td>
+                    <td data-label="Date">
+                        {{match.date}}
+                        <input type="hidden" name="date_{{match.transaction_id}}" value="{{match.formatted_date}}">
+                    </td>
+                    <td data-label="Time">
+                        {{match.time}}
+                        <input type="hidden" name="time_{{match.transaction_id}}" value="{{match.time}}">
+                    </td>
+                    <td data-label="Type">
+                        {{match.type}}
+                        <input type="hidden" name="type_{{match.transaction_id}}" value="{{match.type}}">
+                    </td>
+                    <td data-label="Amount">
+                        {{match.amount}}
+                        <input type="hidden" name="amount_{{match.transaction_id}}" value="{{match.amount}}">
+                    </td>
+                    <td data-label="Description">
+                        <input type="text" name="details_{{match.transaction_id}}" value="{{match.details}}" required>
+                    </td>
+                    <td data-label="Transaction ID">{{match.transaction_id}}</td>
+                    <td data-label="Category">
+                        <select name="category_{{match.transaction_id}}" id="details_{{match.transaction_id}}">
+                            <option value="" disabled selected>Select a category</option>
+                            <option value="Rent">Rent</option>
+                            <option value="Groceries">Groceries</option>
+                            <option value="Insurance">Insurance</option>
+                            <option value="Healthcare"> Healthcare</option>
+                            <option value="Food">Food</option>
+                            <option value="Transport">Transport</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Utilities">Utilities</option>
+                            <option value="Shopping">Shopping</option>
+                            <option value="Financial">Financial</option>
+                            <option value="Household">Household</option>
+                            <option value="Miscellaneous">Miscellaneous</option>
+                            <option value="Primary Income">Primary Income</option>
+                            <option value="Passive Income">Passive Income</option>
+                            <option value="Other Income">Other Income</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div style="text-align: center; margin-top: 20px;">
+            <button type="submit" class="add-button">Upload Selected Transactions</button>
+        </div>
+    </form>
 </div>
-</form>
 
 <script>
-    function filterTransactions() {
-        const startDate = document.getElementById('startDate').value;
-        const endDate = document.getElementById('endDate').value;
-        const transactionType = document.getElementById('transactionType').value;
-
-        const rows = document.querySelectorAll('.transaction-row');
-        const startDateObj = startDate ? new Date(startDate + 'T00:00:00') : null; // Set time to midnight
-        const endDateObj = endDate ? new Date(endDate + 'T23:59:59') : null; // Set time to end of the day
-        rows.forEach(row => {
-            const rowDate = row.getAttribute('data-date');
-            const rowType = row.getAttribute('data-type');
-
-            // Create Date objects for comparison
-            const rowDateObj = new Date(rowDate);
-
-            // Check date range
-            const dateInRange = (!startDateObj || rowDateObj >= startDateObj) &&
-                                (!endDateObj || rowDateObj <= endDateObj);
-
-            // Check transaction type
-            const typeMatches = !transactionType || rowType === transactionType;
-
-            // Show or hide the row based on filters
-            if (dateInRange && typeMatches) {
-                row.style.display = ''; // Show row
-            } else {
-                row.style.display = 'none'; // Hide row
-            }
-        });
+// Theme Toggle Functionality
+function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.getElementById('theme-icon');
+    const currentTheme = body.getAttribute('data-theme');
+    
+    if (currentTheme === 'dark') {
+        body.removeAttribute('data-theme');
+        themeIcon.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+    } else {
+        body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
     }
+}
 
-    document.querySelector('form').addEventListener('submit', function (e) {
+// Load saved theme on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme');
+    const themeIcon = document.getElementById('theme-icon');
+    
+    if (savedTheme === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+    } else {
+        themeIcon.textContent = '🌙';
+    }
+});
+
+// Sidebar Toggle
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('open');
+}
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(event) {
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.querySelector('.mobile-menu-toggle');
+    
+    if (window.innerWidth <= 1024 && 
+        !sidebar.contains(event.target) && 
+        !toggle.contains(event.target)) {
+        sidebar.classList.remove('open');
+    }
+});
+
+function filterTransactions() {
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    const transactionType = document.getElementById('transactionType').value;
+    const rows = document.querySelectorAll('.transaction-row');
+    const startDateObj = startDate ? new Date(startDate + 'T00:00:00') : null;
+    const endDateObj = endDate ? new Date(endDate + 'T23:59:59') : null;
+    
+    rows.forEach(row => {
+        const rowDate = row.getAttribute('data-date');
+        const rowType = row.getAttribute('data-type');
+        const rowDateObj = new Date(rowDate);
+        
+        const dateInRange = (!startDateObj || rowDateObj >= startDateObj) &&
+                            (!endDateObj || rowDateObj <= endDateObj);
+        const typeMatches = !transactionType || rowType === transactionType;
+        
+        if (dateInRange && typeMatches) {
+            // Show row
+            row.style.display = ''; // Make it visible immediately for height calculation
+            requestAnimationFrame(() => { // Wait for next animation frame
+                row.classList.remove('hidden'); // Then remove hidden class to trigger transition
+            });
+            // After transition, ensure display is not 'none'
+            row.addEventListener('transitionend', function handler() {
+                row.style.display = ''; // Ensure it stays visible
+                row.removeEventListener('transitionend', handler);
+            }, { once: true });
+        } else {
+            // Hide row
+            row.classList.add('hidden'); // Add hidden class to trigger transition
+            // After transition, set display to 'none'
+            row.addEventListener('transitionend', function handler() {
+                if (row.classList.contains('hidden')) {
+                    row.style.display = 'none'; // Remove from layout after animation
+                }
+                row.removeEventListener('transitionend', handler);
+            }, { once: true });
+        }
+    });
+}
+
+document.querySelector('form').addEventListener('submit', function (e) {
     const rows = document.querySelectorAll('.transaction-row');
     let anyChecked = false;
     rows.forEach(row => {
         const checkbox = row.querySelector('input[type="checkbox"]');
-        if (!checkbox.checked) {
-            row.remove();
-        } else {
+        // Only consider rows that are currently visible (not hidden by filter)
+        // and are checked for submission.
+        // If a row is hidden by filter, it won't be submitted anyway.
+        if (!checkbox.checked && !row.classList.contains('hidden')) {
+            row.remove(); // Remove from DOM to prevent submission if not checked and visible
+        } else if (checkbox.checked) {
             anyChecked = true;
         }
     });
-
     if (!anyChecked) {
         e.preventDefault();
         alert("Please select at least one transaction before uploading.");
     }
 });
-    </script>
+</script>
 {% endblock %}

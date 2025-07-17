@@ -1,110 +1,215 @@
 {% extends 'base.html' %}
-
 {% load static %}
 
-{% block title %}Analytics{% endblock %}
+{% block title %}Analytics - Expense Tracker{% endblock %}
 
 {% block css %}
-    <link rel="stylesheet" href="{% static 'css/analytics.css' %}">
+<link rel="stylesheet" href="{% static 'css/analytics.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <!-- Header -->
-    <header class="header">
-        <h1>Analytics</h1>
-        <p>Analyze your income and expenses.</p>
-    </header>
+<!-- Theme Toggle Button -->
+<button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+    <span id="theme-icon">🌙</span>
+</button>
 
-    <!-- Filters -->
-    <div class="filters">
-    <form method="GET" action="{% url 'reports:analytics' %}">
+<!-- Mobile Menu Toggle -->
+<button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
 
-        <!-- Start Date Filter -->
-        <div class="filter-item">
-            <label for="start_date">{{form.start_date.label}}</label>
-            {{form.start_date}}
-        </div>
-
-        <!-- End Date Filter -->
-        <div class="filter-item">
-            <label for="end_date">{{form.end_date.label}}</label>
-            {{form.end_date}}
-        </div>
-
-        <!-- Category Filter -->
-        <div class="filter-item">
-            <label for="category">{{form.category.label}}</label>
-            {{form.category}}
-        </div>
-
-        <!-- Transaction Type Filter -->
-        <div class="filter-item">
-            <label for="transaction_type">{{form.transaction_type.label}}</label>
-            {{form.transaction_type}}
-        </div>
-
-        <!-- Amount Range Filter -->
-        <div class="filter-item">
-            <label for="min_amount">{{form.min_amount.label}}</label>
-            {{form.min_amount}}
-        </div>
-
-        <div class="filter-item">
-            <label for="max_amount">{{form.max_amount.label}}</label>
-            {{form.max_amount}}
-        </div>
-
-        <!-- Submit Button -->
-        <div class="filter-item">
-            <button type="submit">Apply Filters</button>
-        </div>
-    </form>
-</div>
-
-
-<!-- Key Analytics -->
-<div class="analytics-summary">
-    <div class="summary-item">
-        <h2>Total Income</h2>
-        <p>{{total_income}}</p>
+<!-- Sidebar Navigation -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h1>Expense Tracker</h1>
+        <p>Financial Management</p>
     </div>
-    <div class="summary-item">
-        <h2>Total Expense</h2>
-        <p>{{total_expense}}</p>
-    </div>
-    <div class="summary-item">
-        <h2>Net Balance</h2>
-        <p>{{balance}}</p>
+    
+    <ul class="nav-menu">
+        <li class="nav-item">
+            <a href="{% url 'core:dashboard' %}" class="nav-link">
+                <span class="nav-icon">📊</span>
+                Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:view_transactions' %}" class="nav-link">
+                <span class="nav-icon">💳</span>
+                Transactions
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:add_income' %}" class="nav-link">
+                <span class="nav-icon">💰</span>
+                Add Income
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:add_expense' %}" class="nav-link">
+                <span class="nav-icon">💸</span>
+                Add Expense
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'reports:analytics' %}" class="nav-link active">
+                <span class="nav-icon">📈</span>
+                Analytics
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:upload_pdf' %}" class="nav-link">
+                <span class="nav-icon">📄</span>
+                Upload PDF
+            </a>
+        </li>
+    </ul>
+    
+    <div class="logout-section">
+        <a href="{% url 'core:logout' %}" class="logout-button">
+            <span class="nav-icon">🚪</span>
+            Logout
+        </a>
     </div>
 </div>
 
-
-    <!-- Transactions Table -->
-    <div class="transactions-container">
-        <h2>Transactions</h2>
-        <table class="transactions-table">
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>Category</th>
-                    <th>Description</th>
-                    <th>Amount</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for transaction in transactions %}
+<!-- Main Content Area -->
+<div class="main-content">
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>Analytics</h1>
+            <p>Analyze your income and expenses.</p>
+        </header>
+        
+        <!-- Filters -->
+        <div class="filters">
+            <form method="GET" action="{% url 'reports:analytics' %}">
+                <!-- Start Date Filter -->
+                <div class="filter-item">
+                    <label for="start_date">{{form.start_date.label}}</label>
+                    {{form.start_date}}
+                </div>
+                <!-- End Date Filter -->
+                <div class="filter-item">
+                    <label for="end_date">{{form.end_date.label}}</label>
+                    {{form.end_date}}
+                </div>
+                <!-- Category Filter -->
+                <div class="filter-item">
+                    <label for="category">{{form.category.label}}</label>
+                    {{form.category}}
+                </div>
+                <!-- Transaction Type Filter -->
+                <div class="filter-item">
+                    <label for="transaction_type">{{form.transaction_type.label}}</label>
+                    {{form.transaction_type}}
+                </div>
+                <!-- Amount Range Filter -->
+                <div class="filter-item">
+                    <label for="min_amount">{{form.min_amount.label}}</label>
+                    {{form.min_amount}}
+                </div>
+                <div class="filter-item">
+                    <label for="max_amount">{{form.max_amount.label}}</label>
+                    {{form.max_amount}}
+                </div>
+                <!-- Submit Button -->
+                <div class="filter-item">
+                    <button type="submit">Apply Filters</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Key Analytics -->
+        <div class="analytics-summary">
+            <div class="summary-item">
+                <h2>Total Income</h2>
+                <p>{{total_income}}</p>
+            </div>
+            <div class="summary-item">
+                <h2>Total Expense</h2>
+                <p>{{total_expense}}</p>
+            </div>
+            <div class="summary-item">
+                <h2>Net Balance</h2>
+                <p class="{% if balance >= 0 %}income-amount{% else %}expense-amount{% endif %}">{{balance}}</p>
+            </div>
+        </div>
+        
+        <!-- Transactions Table -->
+        <div class="transactions-container">
+            <h2>Transactions</h2>
+            <table class="transactions-table">
+                <thead>
                     <tr>
-                        <td>{{transaction.transaction_type}}</td>
-                        <td>{{transaction.category}}</td>
-                        <td>{{transaction.description}}</td>
-                        <td>{{transaction.amount}}</td>
-                        <td>{{transaction.date}}</td>
+                        <th>Type</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                        <th>Date</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                        <tr>
+                            <td>{{transaction.transaction_type}}</td>
+                            <td>{{transaction.category}}</td>
+                            <td>{{transaction.description}}</td>
+                            <td class="{% if transaction.transaction_type == 'Income' %}income-amount{% else %}expense-amount{% endif %}">{{transaction.amount}}</td>
+                            <td>{{transaction.date}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+
+<script>
+// Theme Toggle Functionality
+function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.getElementById('theme-icon');
+    const currentTheme = body.getAttribute('data-theme');
+    
+    if (currentTheme === 'dark') {
+        body.removeAttribute('data-theme');
+        themeIcon.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+    } else {
+        body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Load saved theme on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme');
+    const themeIcon = document.getElementById('theme-icon');
+    
+    if (savedTheme === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+    } else {
+        themeIcon.textContent = '🌙';
+    }
+});
+
+// Sidebar Toggle
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('open');
+}
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(event) {
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.querySelector('.mobile-menu-toggle');
+    
+    if (window.innerWidth <= 1024 && 
+        !sidebar.contains(event.target) && 
+        !toggle.contains(event.target)) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
 {% endblock %}

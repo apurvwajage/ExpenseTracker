@@ -8,43 +8,210 @@
 {% endblock %}
 
 {% block content %}
-<!-- Update Transaction Form -->
-<div class="container">
-    <h1>Update Transaction</h1>
-    <form action="" method="POST">
-        {% csrf_token %}
-        <!-- Hidden input for transaction ID -->
-        <input type="hidden" name="transaction_id" value="<%= transactionId %>">
+<!-- Theme Toggle Button -->
+<button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+    <span id="theme-icon">🌙</span>
+</button>
 
-        <div class="form-group">
-            <label for="transactionType">{{form.transaction_type.label}}</label>
-            {{form.transaction_type}}
-        </div>
+<!-- Mobile Menu Toggle -->
+<button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
 
-        <div class="form-group">
-            <label for="category">{{form.category.label}}</label>
-            {{form.category}}
-        </div>
-
-        <div class="form-group">
-            <label for="description">{{form.description.label}}</label>
-            {{form.description}}
-        </div>
-
-        <div class="form-group">
-            <label for="amount">{{form.amount.label}}</label>
-            {{form.amount}}
-        </div>
-
-        <div class="form-group">
-            <label for="date">{{form.date.label}}</label>
-            {{form.date}}
-        </div>
-
-        <div class="form-group">
-            <button type="submit" class="button">Update</button>
-            <a href="{% url 'transactions:view_transactions' %}" class="button cancel">Cancel</a>
-        </div>
-    </form>
+<!-- Sidebar Navigation -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h1>Expense Tracker</h1>
+        <p>Financial Management</p>
+    </div>
+    
+    <ul class="nav-menu">
+        <li class="nav-item">
+            <a href="{% url 'core:dashboard' %}" class="nav-link">
+                <span class="nav-icon">📊</span>
+                Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:view_transactions' %}" class="nav-link">
+                <span class="nav-icon">💳</span>
+                Transactions
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:add_income' %}" class="nav-link">
+                <span class="nav-icon">💰</span>
+                Add Income
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:add_expense' %}" class="nav-link">
+                <span class="nav-icon">💸</span>
+                Add Expense
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'reports:analytics' %}" class="nav-link">
+                <span class="nav-icon">📈</span>
+                Analytics
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:upload_pdf' %}" class="nav-link">
+                <span class="nav-icon">📄</span>
+                Upload PDF
+            </a>
+        </li>
+    </ul>
+    
+    <div class="logout-section">
+        <a href="{% url 'core:logout' %}" class="logout-button">
+            <span class="nav-icon">🚪</span>
+            Logout
+        </a>
+    </div>
 </div>
+
+<!-- Main Content Area -->
+<div class="main-content">
+    <!-- Update Transaction Form -->
+    <div class="container">
+        <h1>Update Transaction</h1>
+        
+        <form action="" method="POST">
+            {% csrf_token %}
+            
+            <!-- Hidden input for transaction ID -->
+            <input type="hidden" name="transaction_id" value="{{ transaction.id }}">
+            
+            <div class="form-group">
+                <label for="transactionType">{{form.transaction_type.label}}</label>
+                {{form.transaction_type}}
+            </div>
+            
+            <div class="form-group">
+                <label for="category">{{form.category.label}}</label>
+                {{form.category}}
+            </div>
+            
+            <div class="form-group">
+                <label for="description">{{form.description.label}}</label>
+                {{form.description}}
+            </div>
+            
+            <div class="form-group">
+                <label for="amount">{{form.amount.label}}</label>
+                {{form.amount}}
+            </div>
+            
+            <div class="form-group">
+                <label for="date">{{form.date.label}}</label>
+                {{form.date}}
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="button">Update</button>
+                <a href="{% url 'transactions:view_transactions' %}" class="button cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Theme Toggle Functionality
+function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.getElementById('theme-icon');
+    const currentTheme = body.getAttribute('data-theme');
+    
+    if (currentTheme === 'dark') {
+        body.removeAttribute('data-theme');
+        themeIcon.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+    } else {
+        body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Load saved theme on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme');
+    const themeIcon = document.getElementById('theme-icon');
+    
+    if (savedTheme === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+    } else {
+        themeIcon.textContent = '🌙';
+    }
+    
+    // Form validation and enhancement
+    const form = document.querySelector('form');
+    const inputs = form.querySelectorAll('input, select, textarea');
+    const submitButton = form.querySelector('button[type="submit"]');
+    
+    // Add real-time validation
+    inputs.forEach(input => {
+        if (input.type !== 'hidden') {
+            input.addEventListener('blur', function() {
+                if (this.hasAttribute('required') && !this.value.trim()) {
+                    this.style.borderColor = 'var(--error-color)';
+                } else {
+                    this.style.borderColor = 'var(--border-color)';
+                }
+            });
+            
+            input.addEventListener('input', function() {
+                if (this.style.borderColor === 'var(--error-color)' && this.value.trim()) {
+                    this.style.borderColor = 'var(--accent-primary)';
+                }
+            });
+        }
+    });
+    
+    // Loading state for button
+    form.addEventListener('submit', function() {
+        submitButton.classList.add('loading');
+        submitButton.disabled = true;
+    });
+    
+    // Transaction type change handler
+    const transactionTypeSelect = document.querySelector('select[name="transaction_type"]');
+    if (transactionTypeSelect) {
+        transactionTypeSelect.addEventListener('change', function() {
+            const isIncome = this.value === 'Income';
+            const amountInput = document.querySelector('input[name="amount"]');
+            
+            if (amountInput) {
+                if (isIncome) {
+                    amountInput.style.borderColor = 'var(--income-color)';
+                } else {
+                    amountInput.style.borderColor = 'var(--expense-color)';
+                }
+            }
+        });
+        
+        // Trigger change event to set initial state
+        transactionTypeSelect.dispatchEvent(new Event('change'));
+    }
+});
+
+// Sidebar Toggle
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('open');
+}
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(event) {
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.querySelector('.mobile-menu-toggle');
+    
+    if (window.innerWidth <= 1024 && 
+        !sidebar.contains(event.target) && 
+        !toggle.contains(event.target)) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
 {% endblock %}

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block title %}
     Expense Tracker - Login
 {% endblock %}
@@ -9,9 +10,13 @@
 {% endblock %}
 
 {% block content %}
+<!-- Theme Toggle Button -->
+<button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+    <span id="theme-icon">🌙</span>
+</button>
 
 {% if success_message %}
-    <div style="color: green;">{{ success_message }}</div>
+    <div class="success-message">{{ success_message }}</div>
 {% endif %}
 
 <div class="container">
@@ -19,7 +24,7 @@
         <h1>Expense Tracker</h1>
         <p>Login to access your account and manage your expenses efficiently.</p>
     </div>
-
+    
     <!-- Login Form -->
     <div class="form-container">
         <form action="/login/" method="POST" class="form">
@@ -28,33 +33,66 @@
                 <label for="email">{{ form.email.label }}</label>
                 {{ form.email }}
             </div>
-        
+                    
             <div class="form-group">
                 <label for="password">{{ form.password.label }}</label>
                 {{ form.password }}
             </div>
-            {% if success_message %}
-                <div style="color: green;">{{ success_message }}</div>
+            
+            {% if error_message %}
+                <p class="error-message">{{ error_message }}</p>
             {% endif %}
-                {% if error_message %}
-                <p style="color: red;">{{ error_message }}</p>
-                {% endif %}
-
-                {% if form_errors %}
-                <ul style="color: red;">
+                
+            {% if form_errors %}
+                <ul class="error-message">
                     {% for field, errors in form_errors.items %}
                         <li>{{ field }}: {{ errors|join:", " }}</li>
                     {% endfor %}
                 </ul>
-                {% endif %}
-
+            {% endif %}
+            
             <div class="form-group">
                 <button type="submit" class="button">Login</button>
             </div>
-
-            <p>Don't have an account? <a href="/register/" style="color: #00bcd4;">Register here</a></p>
+            <p>Don't have an account? <a href="/register/">Register here</a></p>
         </form>
     </div>
-    </div>
+</div>
+
+<script>
+// Theme Toggle Functionality
+function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.getElementById('theme-icon');
+    const currentTheme = body.getAttribute('data-theme');
     
+    if (currentTheme === 'dark') {
+        body.removeAttribute('data-theme');
+        themeIcon.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+    } else {
+        body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Load saved theme on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme');
+    const themeIcon = document.getElementById('theme-icon');
+    
+    if (savedTheme === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+    } else {
+        themeIcon.textContent = '🌙';
+    }
+});
+
+// Add loading state to button
+document.querySelector('.button').addEventListener('click', function(e) {
+    this.classList.add('loading');
+});
+</script>
 {% endblock %}

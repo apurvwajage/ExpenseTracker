@@ -1,20 +1,199 @@
 {% extends 'base.html' %}
-
 {% load static %}
+
+{% block title %}Upload PDF - Expense Tracker{% endblock %}
 
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/upload_pdf.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2>Upload PDF File</h2>
-    <form action="{% url 'transactions:upload_pdf' %}" method="POST" enctype="multipart/form-data" class="upload-form">
-        {% csrf_token %}
-        <label for="file">{{form.pdf.label}}</label>
-        {{form.pdf}}
-        <br>
-        <button type="submit">Upload</button>
-    </form>
+<!-- Theme Toggle Button -->
+<button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+    <span id="theme-icon">🌙</span>
+</button>
+
+<!-- Mobile Menu Toggle -->
+<button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+
+<!-- Sidebar Navigation -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h1>Expense Tracker</h1>
+        <p>Financial Management</p>
+    </div>
+    
+    <ul class="nav-menu">
+        <li class="nav-item">
+            <a href="{% url 'core:dashboard' %}" class="nav-link">
+                <span class="nav-icon">📊</span>
+                Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:view_transactions' %}" class="nav-link">
+                <span class="nav-icon">💳</span>
+                Transactions
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:add_income' %}" class="nav-link">
+                <span class="nav-icon">💰</span>
+                Add Income
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:add_expense' %}" class="nav-link">
+                <span class="nav-icon">💸</span>
+                Add Expense
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'reports:analytics' %}" class="nav-link">
+                <span class="nav-icon">📈</span>
+                Analytics
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:upload_pdf' %}" class="nav-link active">
+                <span class="nav-icon">📄</span>
+                Upload PDF
+            </a>
+        </li>
+    </ul>
+    
+    <div class="logout-section">
+        <a href="{% url 'core:logout' %}" class="logout-button">
+            <span class="nav-icon">🚪</span>
+            Logout
+        </a>
+    </div>
 </div>
+
+<!-- Main Content Area -->
+<div class="main-content">
+    <div class="container">
+        <h2>Upload PDF File</h2>
+        
+        <form action="{% url 'transactions:upload_pdf' %}" method="POST" enctype="multipart/form-data" class="upload-form">
+            {% csrf_token %}
+            
+            <label for="file">{{form.pdf.label}}</label>
+            
+            <div class="file-upload-wrapper" id="file-upload-wrapper">
+                <div class="file-upload-icon">📄</div>
+                <div class="file-upload-text">
+                    Drag and drop your PDF here or <strong>click to browse</strong>
+                </div>
+                <div class="file-name" id="file-name"></div>
+                {{form.pdf}}
+            </div>
+            
+            <button type="submit" id="upload-button">Upload</button>
+        </form>
+    </div>
+</div>
+
+<script>
+// Theme Toggle Functionality
+function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.getElementById('theme-icon');
+    const currentTheme = body.getAttribute('data-theme');
+    
+    if (currentTheme === 'dark') {
+        body.removeAttribute('data-theme');
+        themeIcon.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+    } else {
+        body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Load saved theme on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme');
+    const themeIcon = document.getElementById('theme-icon');
+    
+    if (savedTheme === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+    } else {
+        themeIcon.textContent = '🌙';
+    }
+    
+    // File upload handling
+    const fileInput = document.querySelector('input[type="file"]');
+    const fileUploadWrapper = document.getElementById('file-upload-wrapper');
+    const fileName = document.getElementById('file-name');
+    const uploadButton = document.getElementById('upload-button');
+    
+    fileUploadWrapper.addEventListener('click', function() {
+        fileInput.click();
+    });
+    
+    fileInput.addEventListener('change', function() {
+        if (this.files.length > 0) {
+            fileName.textContent = this.files[0].name;
+            fileName.classList.add('active');
+            fileUploadWrapper.style.borderColor = 'var(--accent-primary)';
+        } else {
+            fileName.textContent = '';
+            fileName.classList.remove('active');
+            fileUploadWrapper.style.borderColor = 'var(--border-color)';
+        }
+    });
+    
+    // Drag and drop functionality
+    fileUploadWrapper.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.style.borderColor = 'var(--accent-primary)';
+        this.style.backgroundColor = 'rgba(5, 150, 105, 0.05)';
+    });
+    
+    fileUploadWrapper.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        this.style.borderColor = 'var(--border-color)';
+        this.style.backgroundColor = 'var(--bg-tertiary)';
+    });
+    
+    fileUploadWrapper.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.style.borderColor = 'var(--accent-primary)';
+        this.style.backgroundColor = 'var(--bg-tertiary)';
+        
+        if (e.dataTransfer.files.length > 0) {
+            fileInput.files = e.dataTransfer.files;
+            fileName.textContent = e.dataTransfer.files[0].name;
+            fileName.classList.add('active');
+        }
+    });
+    
+    // Loading state for button
+    document.querySelector('form').addEventListener('submit', function() {
+        uploadButton.classList.add('loading');
+        uploadButton.disabled = true;
+    });
+});
+
+// Sidebar Toggle
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('open');
+}
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(event) {
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.querySelector('.mobile-menu-toggle');
+    
+    if (window.innerWidth <= 1024 && 
+        !sidebar.contains(event.target) && 
+        !toggle.contains(event.target)) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
 {% endblock %}

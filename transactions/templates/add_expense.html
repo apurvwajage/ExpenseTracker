@@ -1,30 +1,216 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block title %}Add Expense{% endblock %}
 
 {% block css %}
-<link rel="stylesheet" href="{% static 'css/add_income.css' %}">
+<link rel="stylesheet" href="{% static 'css/add_expense.css' %}">
 {% endblock %}
 
 {% block content %}
+<!-- Theme Toggle Button -->
+<button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+    <span id="theme-icon">🌙</span>
+</button>
+
+<!-- Mobile Menu Toggle -->
+<button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+
+<!-- Sidebar Navigation -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h1>Expense Tracker</h1>
+        <p>Financial Management</p>
+    </div>
+    
+    <ul class="nav-menu">
+        <li class="nav-item">
+            <a href="{% url 'core:dashboard' %}" class="nav-link">
+                <span class="nav-icon">📊</span>
+                Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:view_transactions' %}" class="nav-link">
+                <span class="nav-icon">💳</span>
+                Transactions
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:add_income' %}" class="nav-link">
+                <span class="nav-icon">💰</span>
+                Add Income
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:add_expense' %}" class="nav-link active">
+                <span class="nav-icon">💸</span>
+                Add Expense
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'reports:analytics' %}" class="nav-link">
+                <span class="nav-icon">📈</span>
+                Analytics
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:upload_pdf' %}" class="nav-link">
+                <span class="nav-icon">📄</span>
+                Upload PDF
+            </a>
+        </li>
+    </ul>
+    
+    <div class="logout-section">
+        <a href="{% url 'core:logout' %}" class="logout-button">
+            <span class="nav-icon">🚪</span>
+            Logout
+        </a>
+    </div>
+</div>
+
+<!-- Main Content Area -->
+<div class="main-content">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>Add Expense</h1>
+        <p>Record your expense transactions to monitor your spending habits</p>
+    </div>
+
+    <!-- Form Container -->
     <div class="form-container">
-    <h2>Add Expense</h2>
-    <form action="{% url 'transactions:add_expense'%}" method="POST">
-        {% csrf_token %}
-        <label for="amount">{{ form.amount.label }}</label>
-        {{form.amount}}
-
-        <label for="category">{{ form.category.label }}</label>
-        {{form.category}}
-
-        <label for="description">{{ form.description.label }}</label>
-        {{form.description}}
-
-        <label for="date">{{ form.date.label }}</label>
-        {{form.date}}
-
-        <div class="form-group">
-            <button type="submit" class="button">Submit</button>
+        <div class="expense-warning">
+            Remember to track all your expenses to maintain better financial control
         </div>
+        
+        <h2>Expense Details</h2>
+        <form action="{% url 'transactions:add_expense'%}" method="POST">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="amount">{{ form.amount.label }}</label>
+                {{ form.amount }}
+            </div>
+            
+            <div class="form-group">
+                <label for="category">{{ form.category.label }}</label>
+                {{ form.category }}
+            </div>
+            
+            <div class="form-group">
+                <label for="description">{{ form.description.label }}</label>
+                {{ form.description }}
+            </div>
+            
+            <div class="form-group">
+                <label for="date">{{ form.date.label }}</label>
+                {{ form.date }}
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="button">Add Expense</button>
+            </div>
+        </form>
+    </div>
+</div>
 
+<script>
+// Theme Toggle Functionality
+function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.getElementById('theme-icon');
+    const currentTheme = body.getAttribute('data-theme');
+    
+    if (currentTheme === 'dark') {
+        body.removeAttribute('data-theme');
+        themeIcon.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+    } else {
+        body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Load saved theme on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme');
+    const themeIcon = document.getElementById('theme-icon');
+    
+    if (savedTheme === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+    } else {
+        themeIcon.textContent = '🌙';
+    }
+});
+
+// Sidebar Toggle
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('open');
+}
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(event) {
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.querySelector('.mobile-menu-toggle');
+    
+    if (window.innerWidth <= 1024 && 
+        !sidebar.contains(event.target) && 
+        !toggle.contains(event.target)) {
+        sidebar.classList.remove('open');
+    }
+});
+
+// Add loading state to button
+document.querySelector('.button').addEventListener('click', function(e) {
+    this.classList.add('loading');
+});
+
+// Form validation and enhancement
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const inputs = form.querySelectorAll('input, select, textarea');
+    const amountInput = form.querySelector('input[type="number"]');
+    
+    // Add real-time validation
+    inputs.forEach(input => {
+        input.addEventListener('blur', function() {
+            if (this.hasAttribute('required') && !this.value.trim()) {
+                this.style.borderColor = 'var(--error-color)';
+            } else {
+                this.style.borderColor = 'var(--border-color)';
+            }
+        });
+        
+        input.addEventListener('input', function() {
+            if (this.style.borderColor === 'var(--error-color)' && this.value.trim()) {
+                this.style.borderColor = 'var(--accent-primary)';
+            }
+        });
+    });
+    
+    // Amount validation for expenses
+    if (amountInput) {
+        amountInput.addEventListener('input', function() {
+            const value = parseFloat(this.value);
+            if (value && value > 1000) {
+                this.style.borderColor = 'var(--accent-secondary)';
+            }
+        });
+    }
+    
+    // Category-based icon updates
+    const categorySelect = form.querySelector('select');
+    if (categorySelect) {
+        categorySelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const categoryClass = 'category-' + this.value.toLowerCase().replace(/\s+/g, '-');
+            this.className = categoryClass;
+        });
+    }
+});
+</script>
 {% endblock %}

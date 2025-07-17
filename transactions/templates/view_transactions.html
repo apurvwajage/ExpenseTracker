@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block title %}View Transactions{% endblock %}
 
 {% block css %}
@@ -7,65 +8,339 @@
 {% endblock %}
 
 {% block content %}
-<!-- Header Section -->
-<div class="header">
-    <h1>Transactions</h1>
-    <p>Manage all your income and expenses.</p>
-    <a href="/dashboard/" class="button">Back to Dashboard</a>
+<!-- Theme Toggle Button -->
+<button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+    <span id="theme-icon">🌙</span>
+</button>
+
+<!-- Mobile Menu Toggle -->
+<button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+
+<!-- Sidebar Navigation -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <h1>Expense Tracker</h1>
+        <p>Financial Management</p>
+    </div>
+
+    <ul class="nav-menu">
+        <li class="nav-item">
+            <a href="{% url 'core:dashboard' %}" class="nav-link">
+                <span class="nav-icon">📊</span>
+                Dashboard
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:view_transactions' %}" class="nav-link active">
+                <span class="nav-icon">💳</span>
+                Transactions
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:add_income' %}" class="nav-link">
+                <span class="nav-icon">💰</span>
+                Add Income
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:add_expense' %}" class="nav-link">
+                <span class="nav-icon">💸</span>
+                Add Expense
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'reports:analytics' %}" class="nav-link">
+                <span class="nav-icon">📈</span>
+                Analytics
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{% url 'transactions:upload_pdf' %}" class="nav-link">
+                <span class="nav-icon">📄</span>
+                Upload PDF
+            </a>
+        </li>
+    </ul>
+
+    <div class="logout-section">
+        <a href="{% url 'core:logout' %}" class="logout-button">
+            <span class="nav-icon">🚪</span>
+            Logout
+        </a>
+    </div>
 </div>
 
-<!-- Add Buttons Section -->
-<div class="add-buttons">
-    <a href="{%url 'transactions:add_income'%}" class="button">Add Income</a>
-    <a href="{% url 'transactions:add_expense'%}" class="button">Add Expense</a>
-    <a href="{% url 'transactions:upload_pdf'%}" class="button">Upload a PDF</a>
-</div>
+<!-- Main Content Area -->
+<div class="main-content">
+    <!-- Header Section -->
+    <div class="header">
+        <div class="header-content">
+            <h1>Transactions</h1>
+            <p>Manage all your income and expenses.</p>
+        </div>
+        <a href="/dashboard/" class="button">Back to Dashboard</a>
+    </div>
 
-<!-- Transactions Table -->
-<div class="transactions-container">
-    <table class="transactions-table">
-        <thead>
-            <tr>
-                <th>Type</th>
-                <th>Category</th>
-                <th>Amount</th>
-                <th>Date</th>
-                <th>Actions</th>
-                <!-- <th>File</th> -->
-            </tr>
-        </thead>
-        <tbody>
-            {% for transaction in transactions %}
-                <tr onclick="viewTransaction('{{ transaction.pk }}')">
-                    <td>{{ transaction.transaction_type }}</td>
-                    <td>{{ transaction.category }}</td>
-                    <td>{{ transaction.amount }}</td>
-                    <td>{{ transaction.date }}</td>
-                    <td>
-                        <a href="{% url 'transactions:update' transaction.pk %}" class="button update">Edit</a>
-                        <a href="{% url 'transactions:delete' transaction.pk %}" class="button delete">Delete</a>
-                    </td>
-                    <!-- <td>
-                        {% if transaction.fileName %}
-                                    <a href="{{ transaction.fileName }}" target="_blank" onclick="event.stopPropagation();">
-                                        <ion-icon name="document"></ion-icon>
-                                    </a>
-                        {% endif %}
-                    </td> -->
+    <!-- Filters Section -->
+    <div class="filters">
+        <div class="filter-group">
+            <span class="filter-label">Type:</span>
+            <select class="filter-select" id="type-filter">
+                <option value="all">All</option>
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <span class="filter-label">Date:</span>
+            <select class="filter-select" id="date-filter">
+                <option value="all">All Time</option>
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="year">This Year</option>
+            </select>
+        </div>
+
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Search transactions..." id="search-input">
+        </div>
+    </div>
+
+    <!-- Add Buttons Section -->
+    <div class="add-buttons">
+        <a href="{%url 'transactions:add_income'%}" class="button">Add Income</a>
+        <a href="{% url 'transactions:add_expense'%}" class="button">Add Expense</a>
+        <a href="{% url 'transactions:upload_pdf'%}" class="button">Upload a PDF</a>
+    </div>
+
+    <!-- Transactions Table -->
+    <div class="transactions-container">
+        <table class="transactions-table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Description</th> {# Added Description Header #}
+                    <th>Actions</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                    <tr onclick="viewTransaction(
+                        '{{ transaction.pk }}',
+                        '{{ transaction.transaction_type }}',
+                        '{{ transaction.category }}',
+                        '{{ transaction.amount }}',
+                        '{{ transaction.date|date:"Y-m-d" }}', {# Format date for consistency #}
+                        '{{ transaction.description|default_if_none:"" }}' {# Added Description #}
+                    )">
+                        <td class="{% if transaction.transaction_type == 'Income' %}income-amount{% else %}expense-amount{% endif %}">
+                            {{ transaction.transaction_type }}
+                        </td>
+                        <td>{{ transaction.category }}</td>
+                        <td class="{% if transaction.transaction_type == 'Income' %}income-amount{% else %}expense-amount{% endif %}">
+                            {{ transaction.amount }}
+                        </td>
+                        <td>{{ transaction.date }}</td>
+                        <td>{{ transaction.description|default_if_none:"N/A" }}</td> {# Added Description Cell #}
+                        <td>
+                            <a href="{% url 'transactions:update' transaction.pk %}" class="button update" onclick="event.stopPropagation();">Edit</a>
+                            <a href="{% url 'transactions:delete' transaction.pk %}" class="button delete" onclick="event.stopPropagation();">Delete</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6" class="empty-state">No transactions found. Add your first transaction to get started!</td> {# Updated colspan #}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        <button class="pagination-button">Previous</button>
+        <button class="pagination-button active">1</button>
+        <button class="pagination-button">2</button>
+        <button class="pagination-button">3</button>
+        <button class="pagination-button">Next</button>
+    </div>
 </div>
+
+<!-- Transaction Detail Modal -->
+<div class="transaction-modal" id="transaction-modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <div class="modal-header">
+            <h2>Transaction Details</h2>
+        </div>
+        <div class="transaction-details" id="transaction-details">
+            <!-- Transaction details will be loaded here -->
+        </div>
+        <div class="modal-actions">
+            <button class="button delete" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+</div>
+
 <script>
-    // JavaScript function to view transaction details
-    function viewTransaction(transactionId) {
-    // Your logic to handle the transaction view
-    console.log("Viewing transaction with ID:", transactionId);
-    // For example, you could redirect to a detail page:
-    window.location.href = `/transactions/view_transaction/${transactionId}/`; // Adjust the URL as needed
+// Theme Toggle Functionality
+function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.getElementById('theme-icon');
+    const currentTheme = body.getAttribute('data-theme');
+
+    if (currentTheme === 'dark') {
+        body.removeAttribute('data-theme');
+        themeIcon.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+    } else {
+        body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
     }
+}
+
+// Load saved theme on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const savedTheme = localStorage.getItem('theme');
+    const themeIcon = document.getElementById('theme-icon');
+
+    if (savedTheme === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+    } else {
+        themeIcon.textContent = '🌙';
+    }
+});
+
+// Sidebar Toggle
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('open');
+}
+
+// Close sidebar when clicking outside on mobile
+document.addEventListener('click', function(event) {
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.querySelector('.mobile-menu-toggle');
+
+    if (window.innerWidth <= 1024 &&
+        !sidebar.contains(event.target) &&
+        !toggle.contains(event.target)) {
+        sidebar.classList.remove('open');
+    }
+});
+
+// JavaScript function to view transaction details
+function viewTransaction(transactionId, type, category, amount, date, description) {
+    // Show modal
+    const modal = document.getElementById('transaction-modal');
+    modal.classList.add('active');
+
+    // Populate modal with actual transaction details
+    document.getElementById('transaction-details').innerHTML = `
+        <div class="detail-item">
+            <span class="detail-label">Transaction ID</span>
+            <span class="detail-value">${transactionId}</span>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">Type</span>
+            <span class="detail-value ${type === 'Income' ? 'income-amount' : 'expense-amount'}">${type}</span>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">Category</span>
+            <span class="detail-value">${category}</span>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">Amount</span>
+            <span class="detail-value ${type === 'Income' ? 'income-amount' : 'expense-amount'}">₹${parseFloat(amount).toFixed(2)}</span>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">Date</span>
+            <span class="detail-value">${date}</span>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">Description</span>
+            <span class="detail-value">${description || 'N/A'}</span>
+        </div>
+    `;
+
+    // Prevent body scrolling when modal is open
+    document.body.style.overflow = 'hidden';
+}
+
+// Close modal
+function closeModal() {
+    const modal = document.getElementById('transaction-modal');
+    modal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+// Filter functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const typeFilter = document.getElementById('type-filter');
+    const dateFilter = document.getElementById('date-filter');
+    const searchInput = document.getElementById('search-input');
+
+    // Add event listeners for filters
+    typeFilter.addEventListener('change', applyFilters);
+    dateFilter.addEventListener('change', applyFilters);
+    searchInput.addEventListener('input', applyFilters);
+
+    function applyFilters() {
+        const type = typeFilter.value;
+        const date = dateFilter.value;
+        const search = searchInput.value.toLowerCase();
+
+        const rows = document.querySelectorAll('.transactions-table tbody tr');
+
+        rows.forEach(row => {
+            // Get data from the cells, assuming order: Type, Category, Amount, Date, Description, Actions
+            const typeCell = row.cells[0].textContent.toLowerCase();
+            const categoryCell = row.cells[1].textContent.toLowerCase();
+            const amountCell = row.cells[2].textContent.toLowerCase();
+            const dateCell = row.cells[3].textContent.toLowerCase();
+            const descriptionCell = row.cells[4].textContent.toLowerCase(); // New description cell
+
+            let typeMatch = true;
+            let dateMatch = true;
+            let searchMatch = true;
+
+            // Type filter
+            if (type !== 'all') {
+                typeMatch = typeCell.includes(type.toLowerCase());
+            }
+
+            // Date filter (simplified for demo)
+            if (date !== 'all') {
+                // In a real app, you would implement proper date filtering
+                // This is just a placeholder
+                dateMatch = true;
+            }
+
+            // Search filter
+            if (search) {
+                searchMatch = typeCell.includes(search) ||
+                              categoryCell.includes(search) ||
+                              amountCell.includes(search) ||
+                              dateCell.includes(search) ||
+                              descriptionCell.includes(search); // Include description in search
+            }
+
+            // Show/hide row based on filters
+            if (typeMatch && dateMatch && searchMatch) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+});
 </script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://cdn.jsdelivr.net/npm/ionicons@latest/dist/ionicons/ionicons.js"></script>
 {% endblock %}
